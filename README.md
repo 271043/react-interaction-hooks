@@ -1,6 +1,6 @@
 # @sharpbits/react-interaction-hooks
 
-A collection of **33 React hooks** for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more.
+A collection of **33 React hooks** for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more. Zero dependencies, tree-shakeable, and lightning fast.
 
 [![npm](https://img.shields.io/npm/v/@sharpbits/react-interaction-hooks)](https://www.npmjs.com/package/@sharpbits/react-interaction-hooks)
 [![license](https://img.shields.io/npm/l/@sharpbits/react-interaction-hooks)](./LICENSE)
