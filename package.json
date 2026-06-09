@@ -1,0 +1,86 @@
+{
+  "name": "@sharpbits/react-interaction-hooks",
+  "version": "0.2.1",
+  "description": "33 React hooks for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more.",
+  "author": "sharp0637794267@gmail.com",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "hooks",
+    "useOutsideClick",
+    "useHover",
+    "useScrollLock",
+    "useKeyCombo",
+    "useLongPress",
+    "useDrag",
+    "useSwipe",
+    "useDoubleTap",
+    "usePinch",
+    "usePointerPosition",
+    "useKeyPress",
+    "useFocusTrap",
+    "useArrowNavigation",
+    "useFocusWithin",
+    "useIntersectionObserver",
+    "useIdle",
+    "useCopyToClipboard",
+    "useMediaQuery",
+    "useScrollPosition",
+    "useScrollDirection",
+    "useScrollProgress",
+    "useResizeObserver",
+    "useWindowSize",
+    "useDropZone",
+    "useContextMenu",
+    "useMouseLeaveWindow",
+    "useDeviceOrientation",
+    "useGeolocation",
+    "useNetworkStatus",
+    "useBattery",
+    "useVibrate",
+    "usePageVisibility",
+    "useTextSelection",
+    "ui",
+    "interaction",
+    "accessibility",
+    "touch",
+    "keyboard",
+    "sensors"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest",
+    "prepublishOnly": "npm run build",
+    "demo": "vite",
+    "demo:build": "vite build",
+    "demo:preview": "vite preview --open"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "jsdom": "^29.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.8"
+  }
+}
