@@ -67,7 +67,8 @@
     "prepublishOnly": "npm run build",
     "demo": "vite",
     "demo:build": "vite build",
-    "demo:preview": "vite preview --open"
+    "demo:preview": "vite preview --open",
+    "release": "npm run build && npm version patch && git push && git push --tags && npm publish --access public"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
