@@ -1,6 +1,6 @@
 {
   "name": "@sharpbits/react-interaction-hooks",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A collection of 33 React hooks for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more. Zero dependencies, tree-shakeable, lightweight, and blazing fast.",
   "author": "sharp0637794267@gmail.com",
   "license": "MIT",
