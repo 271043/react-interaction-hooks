@@ -68,7 +68,8 @@
     "demo": "vite",
     "demo:build": "vite build",
     "demo:preview": "vite preview --open",
-    "release": "npm run build && npm version patch && git push && git push --tags && npm publish --access public"
+    "release": "npm run build && npm version patch && git push && git push --tags && npm publish --access public",
+    "deploy": "vite build && gh-pages -d dist-demo"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
@@ -79,6 +80,7 @@
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
+    "gh-pages": "^6.3.0",
     "jsdom": "^29.1.1",
     "lucide-react": "^1.17.0",
     "tsup": "^8.5.1",

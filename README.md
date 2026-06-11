@@ -4,6 +4,7 @@ A collection of **33 React hooks** for UI interactions — pointer, touch, keybo
 
 [![npm](https://img.shields.io/npm/v/@sharpbits/react-interaction-hooks)](https://www.npmjs.com/package/@sharpbits/react-interaction-hooks)
 [![license](https://img.shields.io/npm/l/@sharpbits/react-interaction-hooks)](./LICENSE)
+[![demo](https://img.shields.io/badge/demo-live-6366f1)](https://271043.github.io/react-interaction-hooks/)
 
 ## Installation
 
