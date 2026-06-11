@@ -13,7 +13,7 @@ npm install @sharpbits/react-interaction-hooks
 
 ## Hooks
 
-### 🖱 Pointer & Mouse
+### Pointer & Mouse
 | Hook | Description |
 |------|-------------|
 | [`useOutsideClick`](#useoutsideclick) | Detect clicks/touches outside an element |
@@ -23,7 +23,7 @@ npm install @sharpbits/react-interaction-hooks
 | [`useContextMenu`](#usecontextmenu) | Intercept right-click on an element |
 | [`useMouseLeaveWindow`](#usemouseleavewindow) | Detect when mouse exits the browser window |
 
-### 👆 Touch
+### Touch
 | Hook | Description |
 |------|-------------|
 | [`useSwipe`](#useswipe) | Detect swipe direction from touch |
@@ -31,7 +31,7 @@ npm install @sharpbits/react-interaction-hooks
 | [`usePinch`](#usepinch) | Detect pinch-to-zoom gesture |
 | [`useLongPress`](#uselongpress) | Detect long press on mouse and touch |
 
-### ⌨️ Keyboard
+### Keyboard
 | Hook | Description |
 |------|-------------|
 | [`useKeyPress`](#usekeypress) | Track whether a specific key is held down |
@@ -39,7 +39,7 @@ npm install @sharpbits/react-interaction-hooks
 | [`useArrowNavigation`](#usearrownavigation) | Navigate a list with arrow keys |
 | [`useFocusTrap`](#usefocustrap) | Trap Tab focus inside an element |
 
-### 🎯 Focus & Visibility
+### Focus & Visibility
 | Hook | Description |
 |------|-------------|
 | [`useFocusWithin`](#usefocuswithin) | Detect focus inside an element |
@@ -47,7 +47,7 @@ npm install @sharpbits/react-interaction-hooks
 | [`useIdle`](#useidle) | Detect user inactivity |
 | [`usePageVisibility`](#usepagevisibility) | Detect when the browser tab is hidden |
 
-### 📜 Scroll
+### Scroll
 | Hook | Description |
 |------|-------------|
 | [`useScrollPosition`](#usescrollposition) | Track scroll X/Y position |
@@ -55,13 +55,13 @@ npm install @sharpbits/react-interaction-hooks
 | [`useScrollProgress`](#usescrollprogress) | Scroll progress as a 0–1 value |
 | [`useScrollLock`](#usescrolllock) | Lock body scroll (iOS Safari safe) |
 
-### 📐 Resize
+### Resize
 | Hook | Description |
 |------|-------------|
 | [`useResizeObserver`](#useresizeobserver) | Track element width/height changes |
 | [`useWindowSize`](#usewindowsize) | Track browser window dimensions |
 
-### 🎛 Clipboard & Media
+### Clipboard & Media
 | Hook | Description |
 |------|-------------|
 | [`useCopyToClipboard`](#usecopytoclipboard) | Copy text to clipboard |
@@ -69,7 +69,7 @@ npm install @sharpbits/react-interaction-hooks
 | [`useTextSelection`](#usetextselection) | Track selected text and its bounding rect |
 | [`useDropZone`](#usedropzone) | Accept file drag-and-drop on an element |
 
-### 📡 Device & Sensors
+### Device & Sensors
 | Hook | Description |
 |------|-------------|
 | [`useDeviceOrientation`](#usedeviceorientation) | Read gyroscope orientation (alpha/beta/gamma) |
