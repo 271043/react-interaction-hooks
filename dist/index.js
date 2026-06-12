@@ -773,37 +773,650 @@ function useTextSelection() {
   }, []);
   return selection;
 }
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = react.useState(value);
+  react.useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}
+function useThrottle(value, delay) {
+  const [throttled, setThrottled] = react.useState(value);
+  const lastRan = react.useRef(Date.now());
+  react.useEffect(() => {
+    const remaining = delay - (Date.now() - lastRan.current);
+    if (remaining <= 0) {
+      setThrottled(value);
+      lastRan.current = Date.now();
+    } else {
+      const timer = setTimeout(() => {
+        setThrottled(value);
+        lastRan.current = Date.now();
+      }, remaining);
+      return () => clearTimeout(timer);
+    }
+  }, [value, delay]);
+  return throttled;
+}
+function useInterval(callback, delay) {
+  const savedCallback = react.useRef(callback);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  react.useEffect(() => {
+    if (delay === null) return;
+    const id = setInterval(() => savedCallback.current(), delay);
+    return () => clearInterval(id);
+  }, [delay]);
+}
+function useTimeout(callback, delay) {
+  const savedCallback = react.useRef(callback);
+  const timerRef = react.useRef(null);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  const clear = react.useCallback(() => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+  const reset = react.useCallback(() => {
+    clear();
+    timerRef.current = setTimeout(() => savedCallback.current(), delay);
+  }, [clear, delay]);
+  react.useEffect(() => {
+    reset();
+    return clear;
+  }, [reset, clear]);
+  return { reset, clear };
+}
+function useAnimationFrame(callback) {
+  const savedCallback = react.useRef(callback);
+  const rafRef = react.useRef(0);
+  const lastTimeRef = react.useRef(null);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  react.useEffect(() => {
+    const loop = (time) => {
+      const delta = lastTimeRef.current !== null ? time - lastTimeRef.current : 0;
+      lastTimeRef.current = time;
+      savedCallback.current(delta);
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    rafRef.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+}
+function useCountdown(initialSeconds) {
+  const [count, setCount] = react.useState(initialSeconds);
+  const [running, setRunning] = react.useState(false);
+  const intervalRef = react.useRef(null);
+  const stop = react.useCallback(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setRunning(false);
+  }, []);
+  const start = react.useCallback(() => {
+    if (intervalRef.current !== null) return;
+    setRunning(true);
+    intervalRef.current = setInterval(() => {
+      setCount((c) => {
+        if (c <= 1) {
+          stop();
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1e3);
+  }, [stop]);
+  const reset = react.useCallback(() => {
+    stop();
+    setCount(initialSeconds);
+  }, [stop, initialSeconds]);
+  return { count, running, start, stop, reset };
+}
+function useMutationObserver(ref, callback, options = { childList: true, subtree: true }) {
+  const savedCallback = react.useRef(callback);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  react.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new MutationObserver(
+      (mutations, obs) => savedCallback.current(mutations, obs)
+    );
+    observer.observe(el, options);
+    return () => observer.disconnect();
+  }, [ref, options]);
+}
+function useElementSize(ref) {
+  const [size, setSize] = react.useState({ width: 0, height: 0 });
+  react.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      setSize({ width: rect.width, height: rect.height });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+  return size;
+}
+var INITIAL = {
+  x: 0,
+  y: 0,
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: 0,
+  height: 0
+};
+function useElementPosition(ref) {
+  const [pos, setPos] = react.useState(INITIAL);
+  const update = react.useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos({
+      x: r.x,
+      y: r.y,
+      top: r.top,
+      left: r.left,
+      right: r.right,
+      bottom: r.bottom,
+      width: r.width,
+      height: r.height
+    });
+  }, [ref]);
+  react.useEffect(() => {
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [update]);
+  return pos;
+}
+function useFullscreen(ref) {
+  const [isFullscreen, setIsFullscreen] = react.useState(false);
+  react.useEffect(() => {
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+  const enter = react.useCallback(async () => {
+    var _a;
+    await ((_a = ref.current) == null ? void 0 : _a.requestFullscreen());
+  }, [ref]);
+  const exit = react.useCallback(async () => {
+    if (document.fullscreenElement) await document.exitFullscreen();
+  }, []);
+  const toggle = react.useCallback(async () => {
+    var _a;
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await ((_a = ref.current) == null ? void 0 : _a.requestFullscreen());
+  }, [ref]);
+  return { isFullscreen, enter, exit, toggle };
+}
+function useWakeLock() {
+  const supported = "wakeLock" in navigator;
+  const [active, setActive] = react.useState(false);
+  const lockRef = { current: null };
+  const request = react.useCallback(async () => {
+    if (!supported) return;
+    try {
+      lockRef.current = await navigator.wakeLock.request("screen");
+      lockRef.current.addEventListener("release", () => setActive(false));
+      setActive(true);
+    } catch (e) {
+      setActive(false);
+    }
+  }, [supported]);
+  const release = react.useCallback(async () => {
+    var _a;
+    await ((_a = lockRef.current) == null ? void 0 : _a.release());
+    lockRef.current = null;
+    setActive(false);
+  }, []);
+  react.useEffect(() => {
+    const reacquire = () => {
+      if (active) request();
+    };
+    document.addEventListener("visibilitychange", reacquire);
+    return () => document.removeEventListener("visibilitychange", reacquire);
+  }, [active, request]);
+  return { supported, active, request, release };
+}
+function usePaste(callback) {
+  const savedCallback = react.useRef(callback);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  react.useEffect(() => {
+    const handler = (e) => {
+      var _a, _b;
+      const text = (_b = (_a = e.clipboardData) == null ? void 0 : _a.getData("text")) != null ? _b : "";
+      savedCallback.current(text, e);
+    };
+    document.addEventListener("paste", handler);
+    return () => document.removeEventListener("paste", handler);
+  }, []);
+}
+function useDoubleClick(ref, callback, options = {}) {
+  const { threshold = 300 } = options;
+  const savedCallback = react.useRef(callback);
+  const lastClick = react.useRef(0);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  react.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const handler = (e) => {
+      const now = Date.now();
+      if (now - lastClick.current < threshold) {
+        savedCallback.current(e);
+        lastClick.current = 0;
+      } else {
+        lastClick.current = now;
+      }
+    };
+    el.addEventListener("click", handler);
+    return () => el.removeEventListener("click", handler);
+  }, [ref, threshold]);
+}
+function usePointerLock(ref) {
+  const [isLocked, setIsLocked] = react.useState(false);
+  react.useEffect(() => {
+    const onLock = () => setIsLocked(!!document.pointerLockElement);
+    const onError = () => setIsLocked(false);
+    document.addEventListener("pointerlockchange", onLock);
+    document.addEventListener("pointerlockerror", onError);
+    return () => {
+      document.removeEventListener("pointerlockchange", onLock);
+      document.removeEventListener("pointerlockerror", onError);
+    };
+  }, []);
+  const lock = react.useCallback(async () => {
+    var _a;
+    await ((_a = ref.current) == null ? void 0 : _a.requestPointerLock());
+  }, [ref]);
+  const unlock = react.useCallback(() => {
+    if (document.pointerLockElement) document.exitPointerLock();
+  }, []);
+  return { isLocked, lock, unlock };
+}
+function useKeySequence(sequence, callback) {
+  const savedCallback = react.useRef(callback);
+  const progress = react.useRef(0);
+  react.useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  react.useEffect(() => {
+    const handler = (e) => {
+      if (e.key === sequence[progress.current]) {
+        progress.current += 1;
+        if (progress.current === sequence.length) {
+          savedCallback.current();
+          progress.current = 0;
+        }
+      } else {
+        progress.current = e.key === sequence[0] ? 1 : 0;
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [sequence]);
+}
+function useScrollIntoView(ref, options = { behavior: "smooth", block: "center" }) {
+  return react.useCallback(() => {
+    var _a;
+    (_a = ref.current) == null ? void 0 : _a.scrollIntoView(options);
+  }, [ref, options]);
+}
+function useScrollSpy(refs, options = {}) {
+  const { threshold = 0.5, rootMargin = "0px" } = options;
+  const [activeIndex, setActiveIndex] = react.useState(0);
+  react.useEffect(() => {
+    const observers = [];
+    refs.forEach((ref, index) => {
+      const el = ref.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveIndex(index);
+        },
+        { threshold, rootMargin }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+    return () => observers.forEach((o) => o.disconnect());
+  }, [refs, threshold, rootMargin]);
+  return activeIndex;
+}
+function useInfiniteScroll(ref, onLoadMore, options = {}) {
+  const { threshold = 0.1, rootMargin = "0px" } = options;
+  const [loading, setLoading] = react.useState(false);
+  const savedCallback = react.useRef(onLoadMore);
+  react.useEffect(() => {
+    savedCallback.current = onLoadMore;
+  }, [onLoadMore]);
+  react.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      async ([entry]) => {
+        if (entry.isIntersecting && !loading) {
+          setLoading(true);
+          await savedCallback.current();
+          setLoading(false);
+        }
+      },
+      { threshold, rootMargin }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, loading, threshold, rootMargin]);
+  return { loading };
+}
+function useShare() {
+  const supported = "share" in navigator;
+  const share = react.useCallback(async (data) => {
+    if (!supported) return;
+    await navigator.share(data);
+  }, [supported]);
+  return { supported, share };
+}
+function usePermission(name) {
+  const [state, setState] = react.useState(null);
+  react.useEffect(() => {
+    if (!("permissions" in navigator)) return;
+    let permissionStatus;
+    navigator.permissions.query({ name }).then((status) => {
+      permissionStatus = status;
+      setState(status.state);
+      status.onchange = () => setState(status.state);
+    }).catch(() => {
+    });
+    return () => {
+      if (permissionStatus) permissionStatus.onchange = null;
+    };
+  }, [name]);
+  return state;
+}
+function useNotification() {
+  const supported = "Notification" in window;
+  const [permission, setPermission] = react.useState(
+    supported ? Notification.permission : "denied"
+  );
+  const requestPermission = react.useCallback(async () => {
+    if (!supported) return "denied";
+    const result = await Notification.requestPermission();
+    setPermission(result);
+    return result;
+  }, [supported]);
+  const notify = react.useCallback(
+    (title, options) => {
+      if (!supported || permission !== "granted") return null;
+      return new Notification(title, options);
+    },
+    [supported, permission]
+  );
+  return { permission, supported, requestPermission, notify };
+}
+function useReducedMotion() {
+  const query = "(prefers-reduced-motion: reduce)";
+  const [matches, setMatches] = react.useState(
+    () => window.matchMedia(query).matches
+  );
+  react.useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = (e) => setMatches(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return matches;
+}
+function useColorScheme() {
+  const [scheme, setScheme] = react.useState(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  );
+  react.useEffect(() => {
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e) => setScheme(e.matches ? "dark" : "light");
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return scheme;
+}
+function useGamepad() {
+  const [gamepads, setGamepads] = react.useState([]);
+  react.useEffect(() => {
+    const update = () => {
+      const list = Array.from(navigator.getGamepads()).filter(
+        (g) => g !== null
+      );
+      setGamepads(list);
+    };
+    window.addEventListener("gamepadconnected", update);
+    window.addEventListener("gamepaddisconnected", update);
+    return () => {
+      window.removeEventListener("gamepadconnected", update);
+      window.removeEventListener("gamepaddisconnected", update);
+    };
+  }, []);
+  return { gamepads, connected: gamepads.length > 0 };
+}
+function getSR() {
+  var _a;
+  const w = window;
+  return (_a = w.SpeechRecognition) != null ? _a : w.webkitSpeechRecognition;
+}
+function useSpeechRecognition(lang = "en-US") {
+  const SR = getSR();
+  const supported = !!SR;
+  const [listening, setListening] = react.useState(false);
+  const [transcript, setTranscript] = react.useState("");
+  const recogRef = react.useRef(null);
+  react.useEffect(() => {
+    if (!SR) return;
+    const recog = new SR();
+    recog.continuous = true;
+    recog.interimResults = true;
+    recog.lang = lang;
+    recog.onresult = (e) => {
+      const text = Array.from(e.results).map((r) => r[0].transcript).join("");
+      setTranscript(text);
+    };
+    recog.onend = () => setListening(false);
+    recogRef.current = recog;
+    return () => recog.stop();
+  }, [SR, lang]);
+  const start = react.useCallback(() => {
+    var _a;
+    (_a = recogRef.current) == null ? void 0 : _a.start();
+    setListening(true);
+  }, []);
+  const stop = react.useCallback(() => {
+    var _a;
+    (_a = recogRef.current) == null ? void 0 : _a.stop();
+    setListening(false);
+  }, []);
+  const reset = react.useCallback(() => setTranscript(""), []);
+  return { supported, listening, transcript, start, stop, reset };
+}
+function useSpeechSynthesis() {
+  const supported = "speechSynthesis" in window;
+  const [speaking, setSpeaking] = react.useState(false);
+  const [voices, setVoices] = react.useState([]);
+  react.useEffect(() => {
+    if (!supported) return;
+    const load = () => setVoices(window.speechSynthesis.getVoices());
+    load();
+    window.speechSynthesis.addEventListener("voiceschanged", load);
+    return () => window.speechSynthesis.removeEventListener("voiceschanged", load);
+  }, [supported]);
+  const speak = react.useCallback((text, options = {}) => {
+    if (!supported) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (options.voice) utterance.voice = options.voice;
+    if (options.rate !== void 0) utterance.rate = options.rate;
+    if (options.pitch !== void 0) utterance.pitch = options.pitch;
+    if (options.volume !== void 0) utterance.volume = options.volume;
+    if (options.lang) utterance.lang = options.lang;
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+  }, [supported]);
+  const cancel = react.useCallback(() => {
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+  }, []);
+  return { supported, speaking, voices, speak, cancel };
+}
+function getEyeDropper() {
+  return window.EyeDropper;
+}
+function useEyeDropper() {
+  const EyeDropper = getEyeDropper();
+  const supported = !!EyeDropper;
+  const [color, setColor] = react.useState(null);
+  const open = react.useCallback(async () => {
+    if (!EyeDropper) return null;
+    try {
+      const result = await new EyeDropper().open();
+      setColor(result.sRGBHex);
+      return result.sRGBHex;
+    } catch (e) {
+      return null;
+    }
+  }, [EyeDropper]);
+  return { supported, color, open };
+}
+function useFocusReturn() {
+  const returnRef = react.useRef(null);
+  react.useEffect(() => {
+    returnRef.current = document.activeElement;
+    return () => {
+      var _a;
+      (_a = returnRef.current) == null ? void 0 : _a.focus();
+    };
+  }, []);
+}
+function useTabFocus() {
+  const [isTabFocused, setIsTabFocused] = react.useState(false);
+  react.useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Tab") setIsTabFocused(true);
+    };
+    const onMouseDown = () => setIsTabFocused(false);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("mousedown", onMouseDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", onMouseDown);
+    };
+  }, []);
+  return isTabFocused;
+}
+function useContainerQuery(ref, breakpoints) {
+  const [matches, setMatches] = react.useState(
+    () => Object.fromEntries(Object.keys(breakpoints).map((k) => [k, false]))
+  );
+  react.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const { width } = el.getBoundingClientRect();
+      setMatches(
+        Object.fromEntries(
+          Object.entries(breakpoints).map(([k, minWidth]) => [k, width >= minWidth])
+        )
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, breakpoints]);
+  return matches;
+}
 
+exports.useAnimationFrame = useAnimationFrame;
 exports.useArrowNavigation = useArrowNavigation;
 exports.useBattery = useBattery;
+exports.useColorScheme = useColorScheme;
+exports.useContainerQuery = useContainerQuery;
 exports.useContextMenu = useContextMenu;
 exports.useCopyToClipboard = useCopyToClipboard;
+exports.useCountdown = useCountdown;
+exports.useDebounce = useDebounce;
 exports.useDeviceOrientation = useDeviceOrientation;
+exports.useDoubleClick = useDoubleClick;
 exports.useDoubleTap = useDoubleTap;
 exports.useDrag = useDrag;
 exports.useDropZone = useDropZone;
+exports.useElementPosition = useElementPosition;
+exports.useElementSize = useElementSize;
+exports.useEyeDropper = useEyeDropper;
+exports.useFocusReturn = useFocusReturn;
 exports.useFocusTrap = useFocusTrap;
 exports.useFocusWithin = useFocusWithin;
+exports.useFullscreen = useFullscreen;
+exports.useGamepad = useGamepad;
 exports.useGeolocation = useGeolocation;
 exports.useHover = useHover;
 exports.useIdle = useIdle;
+exports.useInfiniteScroll = useInfiniteScroll;
 exports.useIntersectionObserver = useIntersectionObserver;
+exports.useInterval = useInterval;
 exports.useKeyCombo = useKeyCombo;
 exports.useKeyPress = useKeyPress;
+exports.useKeySequence = useKeySequence;
 exports.useLongPress = useLongPress;
 exports.useMediaQuery = useMediaQuery;
 exports.useMouseLeaveWindow = useMouseLeaveWindow;
+exports.useMutationObserver = useMutationObserver;
 exports.useNetworkStatus = useNetworkStatus;
+exports.useNotification = useNotification;
 exports.useOutsideClick = useOutsideClick;
 exports.usePageVisibility = usePageVisibility;
+exports.usePaste = usePaste;
+exports.usePermission = usePermission;
 exports.usePinch = usePinch;
+exports.usePointerLock = usePointerLock;
 exports.usePointerPosition = usePointerPosition;
+exports.useReducedMotion = useReducedMotion;
 exports.useResizeObserver = useResizeObserver;
 exports.useScrollDirection = useScrollDirection;
+exports.useScrollIntoView = useScrollIntoView;
 exports.useScrollLock = useScrollLock;
 exports.useScrollPosition = useScrollPosition;
 exports.useScrollProgress = useScrollProgress;
+exports.useScrollSpy = useScrollSpy;
+exports.useShare = useShare;
+exports.useSpeechRecognition = useSpeechRecognition;
+exports.useSpeechSynthesis = useSpeechSynthesis;
 exports.useSwipe = useSwipe;
+exports.useTabFocus = useTabFocus;
 exports.useTextSelection = useTextSelection;
+exports.useThrottle = useThrottle;
+exports.useTimeout = useTimeout;
 exports.useVibrate = useVibrate;
+exports.useWakeLock = useWakeLock;
 exports.useWindowSize = useWindowSize;

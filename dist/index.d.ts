@@ -187,4 +187,166 @@ interface TextSelectionState {
 }
 declare function useTextSelection(): TextSelectionState;
 
-export { useArrowNavigation, useBattery, useContextMenu, useCopyToClipboard, useDeviceOrientation, useDoubleTap, useDrag, useDropZone, useFocusTrap, useFocusWithin, useGeolocation, useHover, useIdle, useIntersectionObserver, useKeyCombo, useKeyPress, useLongPress, useMediaQuery, useMouseLeaveWindow, useNetworkStatus, useOutsideClick, usePageVisibility, usePinch, usePointerPosition, useResizeObserver, useScrollDirection, useScrollLock, useScrollPosition, useScrollProgress, useSwipe, useTextSelection, useVibrate, useWindowSize };
+declare function useDebounce<T>(value: T, delay: number): T;
+
+declare function useThrottle<T>(value: T, delay: number): T;
+
+declare function useInterval(callback: () => void, delay: number | null): void;
+
+declare function useTimeout(callback: () => void, delay: number): {
+    reset: () => void;
+    clear: () => void;
+};
+
+declare function useAnimationFrame(callback: (deltaTime: number) => void): void;
+
+interface UseCountdownReturn {
+    count: number;
+    running: boolean;
+    start: () => void;
+    stop: () => void;
+    reset: () => void;
+}
+declare function useCountdown(initialSeconds: number): UseCountdownReturn;
+
+declare function useMutationObserver(ref: React.RefObject<HTMLElement>, callback: MutationCallback, options?: MutationObserverInit): void;
+
+interface ElementSize {
+    width: number;
+    height: number;
+}
+declare function useElementSize<T extends HTMLElement>(ref: RefObject<T>): ElementSize;
+
+interface ElementPosition {
+    x: number;
+    y: number;
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
+    width: number;
+    height: number;
+}
+declare function useElementPosition<T extends HTMLElement>(ref: RefObject<T>): ElementPosition;
+
+interface UseFullscreenReturn {
+    isFullscreen: boolean;
+    enter: () => Promise<void>;
+    exit: () => Promise<void>;
+    toggle: () => Promise<void>;
+}
+declare function useFullscreen<T extends HTMLElement>(ref: RefObject<T>): UseFullscreenReturn;
+
+interface UseWakeLockReturn {
+    supported: boolean;
+    active: boolean;
+    request: () => Promise<void>;
+    release: () => Promise<void>;
+}
+declare function useWakeLock(): UseWakeLockReturn;
+
+declare function usePaste(callback: (text: string, event: ClipboardEvent) => void): void;
+
+interface UseDoubleClickOptions {
+    threshold?: number;
+}
+declare function useDoubleClick<T extends HTMLElement>(ref: RefObject<T>, callback: (event: MouseEvent) => void, options?: UseDoubleClickOptions): void;
+
+interface UsePointerLockReturn {
+    isLocked: boolean;
+    lock: () => Promise<void>;
+    unlock: () => void;
+}
+declare function usePointerLock<T extends HTMLElement>(ref: RefObject<T>): UsePointerLockReturn;
+
+declare function useKeySequence(sequence: string[], callback: () => void): void;
+
+declare function useScrollIntoView<T extends HTMLElement>(ref: RefObject<T>, options?: ScrollIntoViewOptions): () => void;
+
+interface UseScrollSpyOptions {
+    threshold?: number;
+    rootMargin?: string;
+}
+declare function useScrollSpy(refs: RefObject<HTMLElement>[], options?: UseScrollSpyOptions): number;
+
+interface UseInfiniteScrollOptions {
+    threshold?: number;
+    rootMargin?: string;
+}
+declare function useInfiniteScroll(ref: RefObject<HTMLElement>, onLoadMore: () => Promise<void> | void, options?: UseInfiniteScrollOptions): {
+    loading: boolean;
+};
+
+interface ShareData {
+    title?: string;
+    text?: string;
+    url?: string;
+}
+interface UseShareReturn {
+    supported: boolean;
+    share: (data: ShareData) => Promise<void>;
+}
+declare function useShare(): UseShareReturn;
+
+type PermissionState = "granted" | "denied" | "prompt";
+declare function usePermission(name: PermissionName): PermissionState | null;
+
+interface UseNotificationReturn {
+    permission: NotificationPermission;
+    supported: boolean;
+    requestPermission: () => Promise<NotificationPermission>;
+    notify: (title: string, options?: NotificationOptions) => Notification | null;
+}
+declare function useNotification(): UseNotificationReturn;
+
+declare function useReducedMotion(): boolean;
+
+declare function useColorScheme(): "dark" | "light";
+
+interface UseGamepadReturn {
+    gamepads: Gamepad[];
+    connected: boolean;
+}
+declare function useGamepad(): UseGamepadReturn;
+
+interface UseSpeechRecognitionReturn {
+    supported: boolean;
+    listening: boolean;
+    transcript: string;
+    start: () => void;
+    stop: () => void;
+    reset: () => void;
+}
+declare function useSpeechRecognition(lang?: string): UseSpeechRecognitionReturn;
+
+interface UseSpeechSynthesisReturn {
+    supported: boolean;
+    speaking: boolean;
+    voices: SpeechSynthesisVoice[];
+    speak: (text: string, options?: SpeechSynthesisUtteranceInit) => void;
+    cancel: () => void;
+}
+interface SpeechSynthesisUtteranceInit {
+    voice?: SpeechSynthesisVoice;
+    rate?: number;
+    pitch?: number;
+    volume?: number;
+    lang?: string;
+}
+declare function useSpeechSynthesis(): UseSpeechSynthesisReturn;
+
+interface UseEyeDropperReturn {
+    supported: boolean;
+    color: string | null;
+    open: () => Promise<string | null>;
+}
+declare function useEyeDropper(): UseEyeDropperReturn;
+
+declare function useFocusReturn(): void;
+
+declare function useTabFocus(): boolean;
+
+type BreakpointMap = Record<string, number>;
+declare function useContainerQuery<T extends HTMLElement>(ref: RefObject<T>, breakpoints: BreakpointMap): Record<string, boolean>;
+
+export { useAnimationFrame, useArrowNavigation, useBattery, useColorScheme, useContainerQuery, useContextMenu, useCopyToClipboard, useCountdown, useDebounce, useDeviceOrientation, useDoubleClick, useDoubleTap, useDrag, useDropZone, useElementPosition, useElementSize, useEyeDropper, useFocusReturn, useFocusTrap, useFocusWithin, useFullscreen, useGamepad, useGeolocation, useHover, useIdle, useInfiniteScroll, useIntersectionObserver, useInterval, useKeyCombo, useKeyPress, useKeySequence, useLongPress, useMediaQuery, useMouseLeaveWindow, useMutationObserver, useNetworkStatus, useNotification, useOutsideClick, usePageVisibility, usePaste, usePermission, usePinch, usePointerLock, usePointerPosition, useReducedMotion, useResizeObserver, useScrollDirection, useScrollIntoView, useScrollLock, useScrollPosition, useScrollProgress, useScrollSpy, useShare, useSpeechRecognition, useSpeechSynthesis, useSwipe, useTabFocus, useTextSelection, useThrottle, useTimeout, useVibrate, useWakeLock, useWindowSize };

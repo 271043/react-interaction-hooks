@@ -1,6 +1,6 @@
 # @sharpbits/react-interaction-hooks
 
-A collection of **33 React hooks** for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more. Zero dependencies, tree-shakeable, lightweight, and blazing fast.
+A collection of **65 React hooks** for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, timing, and more. Zero dependencies, tree-shakeable, lightweight, and blazing fast.
 
 [![npm](https://img.shields.io/npm/v/@sharpbits/react-interaction-hooks)](https://www.npmjs.com/package/@sharpbits/react-interaction-hooks)
 [![license](https://img.shields.io/npm/l/@sharpbits/react-interaction-hooks)](./LICENSE)
@@ -23,6 +23,8 @@ npm install @sharpbits/react-interaction-hooks
 | [`usePointerPosition`](#usepointerposition) | Track mouse position on the page |
 | [`useContextMenu`](#usecontextmenu) | Intercept right-click on an element |
 | [`useMouseLeaveWindow`](#usemouseleavewindow) | Detect when mouse exits the browser window |
+| [`useDoubleClick`](#usedoubleclick) | Detect double-click on an element (mouse) |
+| [`usePointerLock`](#usepointerlock) | Lock/unlock pointer for raw mouse movement |
 
 ### Touch
 | Hook | Description |
@@ -39,6 +41,7 @@ npm install @sharpbits/react-interaction-hooks
 | [`useKeyCombo`](#usekeycombo) | Listen for keyboard shortcuts |
 | [`useArrowNavigation`](#usearrownavigation) | Navigate a list with arrow keys |
 | [`useFocusTrap`](#usefocustrap) | Trap Tab focus inside an element |
+| [`useKeySequence`](#usekeysequence) | Detect ordered key sequences (Konami code style) |
 
 ### Focus & Visibility
 | Hook | Description |
@@ -47,6 +50,8 @@ npm install @sharpbits/react-interaction-hooks
 | [`useIntersectionObserver`](#useintersectionobserver) | Detect when an element enters/leaves the viewport |
 | [`useIdle`](#useidle) | Detect user inactivity |
 | [`usePageVisibility`](#usepagevisibility) | Detect when the browser tab is hidden |
+| [`useFocusReturn`](#usefocusreturn) | Restore focus to the trigger element on unmount |
+| [`useTabFocus`](#usetabfocus) | Detect whether user is navigating via keyboard |
 
 ### Scroll
 | Hook | Description |
@@ -55,12 +60,20 @@ npm install @sharpbits/react-interaction-hooks
 | [`useScrollDirection`](#usescrolldirection) | Detect scroll direction (up/down) |
 | [`useScrollProgress`](#usescrollprogress) | Scroll progress as a 0–1 value |
 | [`useScrollLock`](#usescrolllock) | Lock body scroll (iOS Safari safe) |
+| [`useScrollIntoView`](#usescrollintoview) | Scroll an element into view programmatically |
+| [`useScrollSpy`](#usescrollspy) | Track which section is active based on scroll |
+| [`useInfiniteScroll`](#useinfinitescroll) | Trigger a callback when a sentinel element is visible |
 
-### Resize
+### Resize & DOM
 | Hook | Description |
 |------|-------------|
 | [`useResizeObserver`](#useresizeobserver) | Track element width/height changes |
 | [`useWindowSize`](#usewindowsize) | Track browser window dimensions |
+| [`useElementSize`](#useelementsize) | Track rendered size of an element via ResizeObserver |
+| [`useElementPosition`](#useelementposition) | Track viewport-relative position of an element |
+| [`useContainerQuery`](#usecontainerquery) | Match element width against named breakpoints |
+| [`useMutationObserver`](#usemutationobserver) | Observe DOM mutations on an element |
+| [`useFullscreen`](#usefullscreen) | Enter/exit fullscreen on an element |
 
 ### Clipboard & Media
 | Hook | Description |
@@ -69,6 +82,12 @@ npm install @sharpbits/react-interaction-hooks
 | [`useMediaQuery`](#usemediaquery) | Subscribe to a CSS media query |
 | [`useTextSelection`](#usetextselection) | Track selected text and its bounding rect |
 | [`useDropZone`](#usedropzone) | Accept file drag-and-drop on an element |
+| [`usePaste`](#usepaste) | Listen for paste events anywhere on the page |
+| [`useShare`](#useshare) | Trigger the native Web Share dialog |
+| [`usePermission`](#usepermission) | Query browser permission state |
+| [`useNotification`](#usenotification) | Request permission and send desktop notifications |
+| [`useReducedMotion`](#usereducedmotion) | Detect prefers-reduced-motion preference |
+| [`useColorScheme`](#usecolorscheme) | Detect prefers-color-scheme (dark/light) |
 
 ### Device & Sensors
 | Hook | Description |
@@ -78,6 +97,21 @@ npm install @sharpbits/react-interaction-hooks
 | [`useNetworkStatus`](#usenetworkstatus) | Track online/offline and connection type |
 | [`useBattery`](#usebattery) | Read battery level and charging state |
 | [`useVibrate`](#usevibrate) | Trigger device vibration |
+| [`useWakeLock`](#usewakelock) | Prevent screen from sleeping |
+| [`useGamepad`](#usegamepad) | Detect connected gamepads |
+| [`useSpeechRecognition`](#usespeechrecognition) | Convert speech to text via Web Speech API |
+| [`useSpeechSynthesis`](#usespeechsynthesis) | Convert text to speech |
+| [`useEyeDropper`](#useeyedropper) | Pick a color from the screen |
+
+### Timing
+| Hook | Description |
+|------|-------------|
+| [`useDebounce`](#usedebounce) | Debounce a value by a given delay |
+| [`useThrottle`](#usethrottle) | Throttle a value to update at most once per interval |
+| [`useInterval`](#useinterval) | Run a callback on a repeating interval |
+| [`useTimeout`](#usetimeout) | Run a callback after a delay, with reset/clear |
+| [`useAnimationFrame`](#useanimationframe) | Run a callback on every animation frame |
+| [`useCountdown`](#usecountdown) | Countdown timer with start, stop, and reset |
 
 ---
 
@@ -663,6 +697,477 @@ vibrate(0)                         // stop
 
 ```ts
 useVibrate() → (pattern: number | number[]) => void
+```
+
+---
+
+### `useDoubleClick`
+
+Fires a callback when the user double-clicks an element (mouse only — for touch use `useDoubleTap`).
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+useDoubleClick(ref, () => likePost())
+```
+
+```ts
+useDoubleClick(ref, callback, options?)
+```
+
+| Option | Type | Default |
+|--------|------|---------|
+| `threshold` | `number` (ms between clicks) | `300` |
+
+---
+
+### `usePointerLock`
+
+Locks the pointer to an element, hiding the cursor and providing raw mouse delta. Used in games and 3D editors.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const { isLocked, lock, unlock } = usePointerLock(ref)
+```
+
+```ts
+usePointerLock(ref) → { isLocked: boolean, lock: () => Promise<void>, unlock: () => void }
+```
+
+---
+
+### `useKeySequence`
+
+Fires a callback when the user presses a specific sequence of keys in order.
+
+```tsx
+useKeySequence(
+  ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown"],
+  () => activateCheats()
+)
+```
+
+```ts
+useKeySequence(sequence: string[], callback: () => void)
+```
+
+---
+
+### `useFocusReturn`
+
+Captures the currently focused element on mount and restores focus to it when the component unmounts. Essential for accessible modals.
+
+```tsx
+function Modal() {
+  useFocusReturn()
+  return <dialog>...</dialog>
+}
+```
+
+```ts
+useFocusReturn() → void
+```
+
+---
+
+### `useTabFocus`
+
+Returns `true` when the user is navigating via the Tab key, `false` when using mouse/touch. Useful for showing focus rings only for keyboard users.
+
+```tsx
+const isTabFocused = useTabFocus()
+```
+
+```ts
+useTabFocus() → boolean
+```
+
+---
+
+### `useScrollIntoView`
+
+Returns a function that smoothly scrolls a ref element into view.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const scrollTo = useScrollIntoView(ref, { behavior: "smooth", block: "center" })
+
+<button onClick={scrollTo}>Go to section</button>
+```
+
+```ts
+useScrollIntoView(ref, options?) → () => void
+```
+
+---
+
+### `useScrollSpy`
+
+Watches multiple section refs and returns the index of the one currently most visible in the viewport.
+
+```tsx
+const active = useScrollSpy([ref1, ref2, ref3], { threshold: 0.5 })
+```
+
+```ts
+useScrollSpy(refs, options?) → number
+```
+
+| Option | Type | Default |
+|--------|------|---------|
+| `threshold` | `number` | `0.5` |
+| `rootMargin` | `string` | `"0px"` |
+
+---
+
+### `useInfiniteScroll`
+
+Fires an async callback when a sentinel element enters the viewport. Use a ref on a bottom marker to load more items.
+
+```tsx
+const { loading } = useInfiniteScroll(sentinelRef, async () => {
+  const more = await fetchNextPage()
+  setItems(prev => [...prev, ...more])
+})
+```
+
+```ts
+useInfiniteScroll(ref, onLoadMore, options?) → { loading: boolean }
+```
+
+---
+
+### `useElementSize`
+
+Tracks the rendered `width` and `height` of an element using `ResizeObserver` + `getBoundingClientRect`.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const { width, height } = useElementSize(ref)
+```
+
+```ts
+useElementSize(ref) → { width: number, height: number }
+```
+
+---
+
+### `useElementPosition`
+
+Tracks the viewport-relative bounding rect of an element, updating on scroll and resize.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const { top, left, width, height } = useElementPosition(ref)
+```
+
+```ts
+useElementPosition(ref) → { x, y, top, left, right, bottom, width, height }
+```
+
+---
+
+### `useContainerQuery`
+
+Matches an element's width against named breakpoints using `ResizeObserver`.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const matches = useContainerQuery(ref, { sm: 300, md: 600, lg: 900 })
+// matches.md === true when element width >= 600px
+```
+
+```ts
+useContainerQuery(ref, breakpoints: Record<string, number>) → Record<string, boolean>
+```
+
+---
+
+### `useMutationObserver`
+
+Observes DOM mutations on an element and fires a callback on each change.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+useMutationObserver(ref, (mutations) => console.log(mutations))
+```
+
+```ts
+useMutationObserver(ref, callback, options?)
+```
+
+Default `options`: `{ childList: true, subtree: true }`
+
+---
+
+### `useFullscreen`
+
+Controls the Fullscreen API for a given element.
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const { isFullscreen, enter, exit, toggle } = useFullscreen(ref)
+```
+
+```ts
+useFullscreen(ref) → { isFullscreen: boolean, enter: () => Promise<void>, exit: () => Promise<void>, toggle: () => Promise<void> }
+```
+
+---
+
+### `usePaste`
+
+Listens for `paste` events anywhere on the page and calls the callback with the pasted text.
+
+```tsx
+usePaste((text, event) => {
+  console.log("Pasted:", text)
+})
+```
+
+```ts
+usePaste(callback: (text: string, event: ClipboardEvent) => void)
+```
+
+---
+
+### `useShare`
+
+Wraps the Web Share API. Falls back gracefully on unsupported browsers.
+
+```tsx
+const { supported, share } = useShare()
+await share({ title: "Hello", url: window.location.href })
+```
+
+```ts
+useShare() → { supported: boolean, share: (data: ShareData) => Promise<void> }
+```
+
+---
+
+### `usePermission`
+
+Queries the Permissions API for the current state of a browser permission.
+
+```tsx
+const state = usePermission("camera") // "granted" | "denied" | "prompt" | null
+```
+
+```ts
+usePermission(name: PermissionName) → "granted" | "denied" | "prompt" | null
+```
+
+---
+
+### `useNotification`
+
+Requests notification permission and provides a `notify` helper.
+
+```tsx
+const { permission, requestPermission, notify } = useNotification()
+await requestPermission()
+notify("Hello!", { body: "World" })
+```
+
+```ts
+useNotification() → { supported, permission, requestPermission, notify }
+```
+
+---
+
+### `useReducedMotion`
+
+Returns `true` when the user has requested reduced motion via OS/browser settings.
+
+```tsx
+const reduced = useReducedMotion()
+const duration = reduced ? 0 : 300
+```
+
+```ts
+useReducedMotion() → boolean
+```
+
+---
+
+### `useColorScheme`
+
+Returns the user's preferred color scheme.
+
+```tsx
+const scheme = useColorScheme() // "dark" | "light"
+```
+
+```ts
+useColorScheme() → "dark" | "light"
+```
+
+---
+
+### `useWakeLock`
+
+Prevents the screen from sleeping using the Screen Wake Lock API (Chrome/Edge only).
+
+```tsx
+const { supported, active, request, release } = useWakeLock()
+```
+
+```ts
+useWakeLock() → { supported: boolean, active: boolean, request: () => Promise<void>, release: () => Promise<void> }
+```
+
+---
+
+### `useGamepad`
+
+Detects connected gamepads via the Gamepad API.
+
+```tsx
+const { gamepads, connected } = useGamepad()
+```
+
+```ts
+useGamepad() → { gamepads: Gamepad[], connected: boolean }
+```
+
+---
+
+### `useSpeechRecognition`
+
+Converts speech to text using the Web Speech API (Chrome/Edge only).
+
+```tsx
+const { supported, listening, transcript, start, stop, reset } = useSpeechRecognition()
+```
+
+```ts
+useSpeechRecognition(lang?) → { supported, listening, transcript, start, stop, reset }
+```
+
+| Param | Type | Default |
+|-------|------|---------|
+| `lang` | `string` | `"en-US"` |
+
+---
+
+### `useSpeechSynthesis`
+
+Converts text to speech using the SpeechSynthesis API.
+
+```tsx
+const { speak, speaking, voices, cancel } = useSpeechSynthesis()
+speak("Hello world", { rate: 1.2, pitch: 1 })
+```
+
+```ts
+useSpeechSynthesis() → { supported, speaking, voices, speak, cancel }
+```
+
+---
+
+### `useEyeDropper`
+
+Opens the browser's color picker to sample a color from anywhere on the screen (Chrome 95+).
+
+```tsx
+const { supported, color, open } = useEyeDropper()
+const hex = await open() // e.g. "#ff5733"
+```
+
+```ts
+useEyeDropper() → { supported: boolean, color: string | null, open: () => Promise<string | null> }
+```
+
+---
+
+### `useDebounce`
+
+Returns a debounced copy of a value that only updates after the specified delay.
+
+```tsx
+const [search, setSearch] = useState("")
+const debounced = useDebounce(search, 400)
+
+useEffect(() => {
+  fetchResults(debounced)
+}, [debounced])
+```
+
+```ts
+useDebounce<T>(value: T, delay: number) → T
+```
+
+---
+
+### `useThrottle`
+
+Returns a throttled copy of a value that updates at most once per interval.
+
+```tsx
+const [pos, setPos] = useState({ x: 0, y: 0 })
+const throttled = useThrottle(pos, 100)
+```
+
+```ts
+useThrottle<T>(value: T, delay: number) → T
+```
+
+---
+
+### `useInterval`
+
+Runs a callback on a repeating interval. Pass `null` as the delay to pause.
+
+```tsx
+useInterval(() => setCount(c => c + 1), running ? 1000 : null)
+```
+
+```ts
+useInterval(callback: () => void, delay: number | null)
+```
+
+---
+
+### `useTimeout`
+
+Fires a callback after a delay. Returns `reset` and `clear` controls.
+
+```tsx
+const { reset, clear } = useTimeout(() => setFired(true), 3000)
+```
+
+```ts
+useTimeout(callback, delay) → { reset: () => void, clear: () => void }
+```
+
+---
+
+### `useAnimationFrame`
+
+Calls a callback on every animation frame, passing the delta time since the last frame.
+
+```tsx
+useAnimationFrame((deltaTime) => {
+  setAngle(a => (a + deltaTime * 0.1) % 360)
+})
+```
+
+```ts
+useAnimationFrame(callback: (deltaTime: number) => void)
+```
+
+---
+
+### `useCountdown`
+
+A countdown timer with start, stop, and reset controls.
+
+```tsx
+const { count, running, start, stop, reset } = useCountdown(60)
+```
+
+```ts
+useCountdown(initialSeconds: number) → { count, running, start, stop, reset }
 ```
 
 ---

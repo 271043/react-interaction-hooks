@@ -8,12 +8,21 @@ import {
   useResizeObserver, useWindowSize, useDropZone, useContextMenu,
   useMouseLeaveWindow, useDeviceOrientation, useGeolocation,
   useNetworkStatus, useBattery, useVibrate, usePageVisibility, useTextSelection,
+  useDebounce, useThrottle, useInterval, useTimeout, useAnimationFrame,
+  useCountdown, useMutationObserver, useElementSize, useElementPosition,
+  useFullscreen, useWakeLock, usePaste, useDoubleClick, usePointerLock,
+  useKeySequence, useScrollIntoView, useScrollSpy, useInfiniteScroll,
+  useShare, usePermission, useNotification, useReducedMotion, useColorScheme,
+  useGamepad, useSpeechRecognition, useSpeechSynthesis, useEyeDropper,
+  useFocusReturn, useTabFocus, useContainerQuery,
 } from "@sharpbits/react-interaction-hooks";
 import {
   Mouse, Hand, Keyboard, Eye, EyeOff, ScrollText, Maximize2, Clipboard,
   Cpu, Lock, LockOpen, Check, Moon, Sun, Smartphone, Monitor, ArrowDown,
   ArrowUp, FolderOpen, Folder, Zap, Battery, Package, Loader2,
   MoveHorizontal, Wifi, WifiOff, ClipboardCopy, Move,
+  Timer, Mic, MicOff, Volume2, Gamepad2, Pipette, Bell, BellOff,
+  Share2, Maximize, MousePointerClick, Play, Square, RotateCcw,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -827,25 +836,586 @@ function TextSelectionDemo() {
   );
 }
 
+// ─── New demos ───────────────────────────────────────────────────────────────
+
+function DebounceDemo() {
+  const [input, setInput] = useState("");
+  const debounced = useDebounce(input, 500);
+  return (
+    <DemoCard hookName="useDebounce" hint="Type fast — debounced value updates 500ms after you stop" code={
+`const [input, setInput] = useState("")
+const debounced = useDebounce(input, 500)`}>
+      <input
+        value={input} onChange={e => setInput(e.target.value)}
+        placeholder="Type here…"
+        style={{ width: "100%", padding: "10px 14px", borderRadius: "9px", border: "1.5px solid #e2e8f0", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
+      />
+      <div style={s.val}>Debounced: <strong>{debounced || <span style={{ color: "#94a3b8" }}>empty</span>}</strong></div>
+    </DemoCard>
+  );
+}
+
+function ThrottleDemo() {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const throttled = useThrottle(pos, 200);
+  return (
+    <DemoCard hookName="useThrottle" hint="Move mouse over the box — throttled to 200ms" code={
+`const [pos, setPos] = useState({ x: 0, y: 0 })
+const throttled = useThrottle(pos, 200)`}>
+      <div
+        onMouseMove={e => { const r = e.currentTarget.getBoundingClientRect(); setPos({ x: Math.round(e.clientX - r.left), y: Math.round(e.clientY - r.top) }); }}
+        style={s.box({ cursor: "crosshair", background: "#f8fafc" })}
+      >Move mouse here</div>
+      <div style={s.val}>x: <strong>{throttled.x}</strong> · y: <strong>{throttled.y}</strong></div>
+    </DemoCard>
+  );
+}
+
+function IntervalDemo() {
+  const [count, setCount] = useState(0);
+  const [running, setRunning] = useState(false);
+  useInterval(() => setCount(c => c + 1), running ? 1000 : null);
+  return (
+    <DemoCard hookName="useInterval" code={
+`const [count, setCount] = useState(0)
+useInterval(() => setCount(c => c + 1), 1000)`}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+        <button style={s.btn({ background: running ? "#dc2626" : "#6366f1" })} onClick={() => setRunning(r => !r)}>
+          {running ? <><Square size={13} /> Stop</> : <><Play size={13} /> Start</>}
+        </button>
+        <button style={s.btn({ background: "#64748b" })} onClick={() => setCount(0)}><RotateCcw size={13} /> Reset</button>
+      </div>
+      <div style={s.val}>Count: <strong>{count}</strong></div>
+    </DemoCard>
+  );
+}
+
+function TimeoutDemo() {
+  const [fired, setFired] = useState(false);
+  const { reset, clear } = useTimeout(() => setFired(true), 2000);
+  return (
+    <DemoCard hookName="useTimeout" hint="Fires after 2 seconds — reset to restart" code={
+`const { reset, clear } = useTimeout(() => setFired(true), 2000)`}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+        <button style={s.btn()} onClick={() => { setFired(false); reset(); }}><RotateCcw size={13} /> Reset</button>
+        <button style={s.btn({ background: "#64748b" })} onClick={clear}>Clear</button>
+      </div>
+      <div style={{ ...s.val, background: fired ? "#f0fdf4" : "#f8fafc", border: `1px solid ${fired ? "#bbf7d0" : "#e8ecf0"}`, color: fired ? "#15803d" : "#64748b" }}>
+        {fired ? <><Check size={13} /> Fired!</> : "Waiting…"}
+      </div>
+    </DemoCard>
+  );
+}
+
+function AnimationFrameDemo() {
+  const [angle, setAngle] = useState(0);
+  const [running, setRunning] = useState(false);
+  useAnimationFrame((dt) => {
+    if (running) setAngle(a => (a + dt * 0.1) % 360);
+  });
+  return (
+    <DemoCard hookName="useAnimationFrame" code={
+`useAnimationFrame((deltaTime) => {
+  setAngle(a => (a + deltaTime * 0.1) % 360)
+})`}>
+      <button style={s.btn({ background: running ? "#dc2626" : "#6366f1", marginBottom: "12px" })} onClick={() => setRunning(r => !r)}>
+        {running ? <><Square size={13} /> Stop</> : <><Play size={13} /> Start</>}
+      </button>
+      <div style={s.box({ background: "#f0f9ff" })}>
+        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "conic-gradient(#6366f1, #a855f7, #6366f1)", transform: `rotate(${angle}deg)`, transition: "none" }} />
+      </div>
+    </DemoCard>
+  );
+}
+
+function CountdownDemo() {
+  const { count, running, start, stop, reset } = useCountdown(10);
+  return (
+    <DemoCard hookName="useCountdown" code={
+`const { count, running, start, stop, reset } = useCountdown(10)`}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+        <button style={s.btn({ background: running ? "#dc2626" : "#6366f1" })} onClick={running ? stop : start}>
+          {running ? <><Square size={13} /> Stop</> : <><Play size={13} /> Start</>}
+        </button>
+        <button style={s.btn({ background: "#64748b" })} onClick={reset}><RotateCcw size={13} /> Reset</button>
+      </div>
+      <div style={{ ...s.val, fontSize: "28px", fontWeight: 700, textAlign: "center", color: count === 0 ? "#dc2626" : "#0f172a" }}>
+        {count}s
+      </div>
+    </DemoCard>
+  );
+}
+
+function MutationObserverDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [mutations, setMutations] = useState(0);
+  const [items, setItems] = useState<string[]>(["Item 1"]);
+  useMutationObserver(ref, () => setMutations(m => m + 1));
+  return (
+    <DemoCard hookName="useMutationObserver" hint="Click Add — observer fires on each DOM change" code={
+`useMutationObserver(ref, (mutations) => {
+  console.log(mutations)
+})`}>
+      <button style={s.btn({ marginBottom: "12px" })} onClick={() => setItems(i => [...i, `Item ${i.length + 1}`])}>
+        Add item
+      </button>
+      <div ref={ref} style={{ ...s.val, minHeight: "60px" }}>
+        {items.map((item, i) => <div key={i}>{item}</div>)}
+      </div>
+      <div style={{ ...s.val, marginTop: "8px" }}>Mutations observed: <strong>{mutations}</strong></div>
+    </DemoCard>
+  );
+}
+
+function ElementSizeDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { width, height } = useElementSize(ref);
+  return (
+    <DemoCard hookName="useElementSize" hint="Resize the browser window to see values update" code={
+`const ref = useRef(null)
+const { width, height } = useElementSize(ref)`}>
+      <div ref={ref} style={s.box({ background: "#f0f9ff", borderColor: "#bae6fd", flexDirection: "column", gap: "4px" })}>
+        <div style={{ fontWeight: 700, color: "#0ea5e9" }}>{Math.round(width)} × {Math.round(height)}</div>
+        <div style={{ fontSize: "12px", color: "#64748b" }}>px</div>
+      </div>
+    </DemoCard>
+  );
+}
+
+function ElementPositionDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { top, left } = useElementPosition(ref);
+  return (
+    <DemoCard hookName="useElementPosition" hint="Scroll the page — position updates in real time" code={
+`const ref = useRef(null)
+const { top, left, width, height } = useElementPosition(ref)`}>
+      <div ref={ref} style={s.box({ background: "#faf5ff", borderColor: "#d8b4fe", flexDirection: "column", gap: "4px" })}>
+        <div style={{ fontWeight: 700, color: "#7c3aed" }}>top: {Math.round(top)} · left: {Math.round(left)}</div>
+        <div style={{ fontSize: "12px", color: "#64748b" }}>viewport-relative px</div>
+      </div>
+    </DemoCard>
+  );
+}
+
+function FullscreenDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggle } = useFullscreen(ref);
+  return (
+    <DemoCard hookName="useFullscreen" code={
+`const ref = useRef(null)
+const { isFullscreen, enter, exit, toggle } = useFullscreen(ref)`}>
+      <div ref={ref} style={s.box({ background: isFullscreen ? "#0f172a" : "#f8fafc", color: isFullscreen ? "#f1f5f9" : "#64748b", border: isFullscreen ? "none" : undefined, flexDirection: "column", gap: "8px" })}>
+        <Maximize size={20} />
+        <button style={s.btn({ background: isFullscreen ? "#dc2626" : "#6366f1" })} onClick={toggle}>
+          {isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+        </button>
+      </div>
+    </DemoCard>
+  );
+}
+
+function WakeLockDemo() {
+  const { supported, active, request, release } = useWakeLock();
+  return (
+    <DemoCard hookName="useWakeLock" hint="Prevents screen from sleeping (Chrome/Edge only)" code={
+`const { supported, active, request, release } = useWakeLock()`}>
+      {!supported
+        ? <div style={s.val}>Not supported in this browser</div>
+        : <button style={s.btn({ background: active ? "#dc2626" : "#6366f1" })} onClick={active ? release : request}>
+            {active ? <><Zap size={13} /> Release Wake Lock</> : <><Zap size={13} /> Request Wake Lock</>}
+          </button>
+      }
+      <div style={{ ...s.val, marginTop: "12px", background: active ? "#f0fdf4" : "#f8fafc", border: `1px solid ${active ? "#bbf7d0" : "#e8ecf0"}`, color: active ? "#15803d" : "#64748b" }}>
+        {active ? "Screen will stay awake" : "Screen sleep allowed"}
+      </div>
+    </DemoCard>
+  );
+}
+
+function PasteDemo() {
+  const [pasted, setPasted] = useState<string | null>(null);
+  usePaste((text) => setPasted(text));
+  return (
+    <DemoCard hookName="usePaste" hint="Copy some text then press Ctrl+V anywhere on the page" code={
+`usePaste((text, event) => {
+  console.log("Pasted:", text)
+})`}>
+      <div style={{ ...s.val, minHeight: "48px", color: pasted ? "#0f172a" : "#94a3b8" }}>
+        {pasted ? `"${pasted.slice(0, 80)}${pasted.length > 80 ? "…" : ""}"` : "Paste something…"}
+      </div>
+    </DemoCard>
+  );
+}
+
+function DoubleClickDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [count, setCount] = useState(0);
+  useDoubleClick(ref, () => setCount(c => c + 1));
+  return (
+    <DemoCard hookName="useDoubleClick" hint="Double-click the box (mouse only, distinct from touch doubleTap)" code={
+`const ref = useRef(null)
+useDoubleClick(ref, () => likePost())`}>
+      <div ref={ref} style={s.box({ background: count > 0 ? "#fff7ed" : "#f8fafc", borderColor: count > 0 ? "#fed7aa" : "#cbd5e1", cursor: "pointer" })}>
+        <MousePointerClick size={18} style={{ marginRight: "6px", color: count > 0 ? "#ea580c" : "#94a3b8" }} />
+        Double-clicks: <strong style={{ marginLeft: "4px" }}>{count}</strong>
+      </div>
+    </DemoCard>
+  );
+}
+
+function PointerLockDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { isLocked, lock, unlock } = usePointerLock(ref);
+  return (
+    <DemoCard hookName="usePointerLock" hint="Lock hides cursor and gives raw mouse movement (games/3D editors)" code={
+`const ref = useRef(null)
+const { isLocked, lock, unlock } = usePointerLock(ref)`}>
+      <div ref={ref} style={s.box({ background: isLocked ? "#fef3c7" : "#f8fafc", borderColor: isLocked ? "#fcd34d" : "#cbd5e1", flexDirection: "column", gap: "8px" })}>
+        <div style={{ fontSize: "13px", color: "#64748b" }}>{isLocked ? "Pointer locked — press Esc to release" : "Click to lock pointer"}</div>
+        <button style={s.btn({ background: isLocked ? "#dc2626" : "#6366f1" })} onClick={isLocked ? unlock : lock}>
+          {isLocked ? <><LockOpen size={13} /> Unlock</> : <><Lock size={13} /> Lock Pointer</>}
+        </button>
+      </div>
+    </DemoCard>
+  );
+}
+
+function KeySequenceDemo() {
+  const [hit, setHit] = useState(false);
+  useKeySequence(["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight"], () => { setHit(true); setTimeout(() => setHit(false), 2000); });
+  return (
+    <DemoCard hookName="useKeySequence" hint="Try: ↑ ↑ ↓ ↓ ← → ← →" code={
+`useKeySequence(
+  ["ArrowUp","ArrowUp","ArrowDown","ArrowDown",
+   "ArrowLeft","ArrowRight","ArrowLeft","ArrowRight"],
+  () => activateCheats()
+)`}>
+      <div style={{ ...s.val, textAlign: "center", background: hit ? "#f0fdf4" : "#f8fafc", border: `1px solid ${hit ? "#bbf7d0" : "#e8ecf0"}`, color: hit ? "#15803d" : "#64748b" }}>
+        {hit ? <><Check size={14} /> Konami code activated!</> : "↑ ↑ ↓ ↓ ← → ← →"}
+      </div>
+    </DemoCard>
+  );
+}
+
+function ScrollIntoViewDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const scrollTo = useScrollIntoView(ref, { behavior: "smooth", block: "center" });
+  return (
+    <DemoCard hookName="useScrollIntoView" code={
+`const ref = useRef(null)
+const scrollTo = useScrollIntoView(ref, { behavior: "smooth" })
+// ...
+<button onClick={scrollTo}>Scroll to element</button>`}>
+      <div ref={ref} style={s.box({ background: "#f0fdf4", borderColor: "#86efac", borderStyle: "solid" })}>
+        Target element
+      </div>
+      <button style={s.btn({ marginTop: "12px" })} onClick={scrollTo}>Scroll to target</button>
+    </DemoCard>
+  );
+}
+
+function ScrollSpyDemo() {
+  const ref1 = useRef<HTMLDivElement>(null);
+  const ref2 = useRef<HTMLDivElement>(null);
+  const ref3 = useRef<HTMLDivElement>(null);
+  const refs = [ref1, ref2, ref3];
+  const labels = ["Section A", "Section B", "Section C"];
+  const active = useScrollSpy(refs, { threshold: 0.8 });
+  return (
+    <DemoCard hookName="useScrollSpy" hint="Scroll inside the box" code={
+`const active = useScrollSpy([ref1, ref2, ref3], { threshold: 0.5 })`}>
+      <div style={{ display: "flex", gap: "6px", marginBottom: "10px" }}>
+        {labels.map((l, i) => (
+          <span key={i} style={{ ...s.chip(active === i), fontSize: "12px" }}>{l}</span>
+        ))}
+      </div>
+      <div style={{ height: "120px", overflowY: "auto", border: "1.5px dashed #cbd5e1", borderRadius: "10px" }}>
+        {refs.map((r, i) => (
+          <div key={i} ref={r} style={{ height: "100px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", color: active === i ? "#6366f1" : "#94a3b8", fontWeight: active === i ? 700 : 400, borderBottom: "1px solid #f1f5f9" }}>
+            {labels[i]}
+          </div>
+        ))}
+      </div>
+    </DemoCard>
+  );
+}
+
+function InfiniteScrollDemo() {
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [items, setItems] = useState(Array.from({ length: 5 }, (_, i) => `Item ${i + 1}`));
+  const { loading } = useInfiniteScroll(sentinelRef, async () => {
+    await new Promise(r => setTimeout(r, 600));
+    setItems(prev => [...prev, ...Array.from({ length: 3 }, (_, i) => `Item ${prev.length + i + 1}`)]);
+  });
+  return (
+    <DemoCard hookName="useInfiniteScroll" hint="Scroll to bottom to load more" code={
+`const { loading } = useInfiniteScroll(ref, async () => {
+  const more = await fetchNextPage()
+  setItems(prev => [...prev, ...more])
+})`}>
+      <div style={{ height: "160px", overflowY: "auto", border: "1.5px dashed #cbd5e1", borderRadius: "10px", padding: "8px" }}>
+        {items.map((item, i) => (
+          <div key={i} style={{ padding: "8px 12px", borderRadius: "7px", marginBottom: "4px", background: "#f8fafc", fontSize: "13px", color: "#475569" }}>{item}</div>
+        ))}
+        <div ref={sentinelRef} style={{ padding: "8px", textAlign: "center", fontSize: "12px", color: "#94a3b8" }}>
+          {loading ? <><Loader2 size={12} style={{ animation: "spin 1s linear infinite", display: "inline" }} /> Loading…</> : "Scroll for more"}
+        </div>
+      </div>
+    </DemoCard>
+  );
+}
+
+function ShareDemo() {
+  const { supported, share } = useShare();
+  const [result, setResult] = useState<string | null>(null);
+  return (
+    <DemoCard hookName="useShare" hint="Native share dialog (mobile/supported browsers only)" code={
+`const { supported, share } = useShare()
+await share({ title: "Hello", url: window.location.href })`}>
+      {!supported
+        ? <div style={s.val}>Web Share API not supported in this browser</div>
+        : <button style={s.btn()} onClick={async () => {
+            try { await share({ title: "react-interaction-hooks", url: "https://271043.github.io/react-interaction-hooks/" }); setResult("Shared!"); }
+            catch { setResult("Cancelled"); }
+          }}><Share2 size={13} /> Share</button>
+      }
+      {result && <div style={{ ...s.val, marginTop: "10px" }}>{result}</div>}
+    </DemoCard>
+  );
+}
+
+function PermissionDemo() {
+  const camera = usePermission("camera" as PermissionName);
+  const notifications = usePermission("notifications" as PermissionName);
+  return (
+    <DemoCard hookName="usePermission" code={
+`const state = usePermission("camera")
+// "granted" | "denied" | "prompt" | null`}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={s.val}>camera: <strong style={{ color: camera === "granted" ? "#15803d" : camera === "denied" ? "#b91c1c" : "#92400e" }}>{camera ?? "…"}</strong></div>
+        <div style={s.val}>notifications: <strong style={{ color: notifications === "granted" ? "#15803d" : notifications === "denied" ? "#b91c1c" : "#92400e" }}>{notifications ?? "…"}</strong></div>
+      </div>
+    </DemoCard>
+  );
+}
+
+function NotificationDemo() {
+  const { permission, requestPermission, notify, supported } = useNotification();
+  return (
+    <DemoCard hookName="useNotification" code={
+`const { permission, requestPermission, notify } = useNotification()
+await requestPermission()
+notify("Hello!", { body: "World" })`}>
+      {!supported
+        ? <div style={s.val}>Notifications not supported</div>
+        : <>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+              <button style={s.btn()} onClick={requestPermission}>
+                <Bell size={13} /> Request Permission
+              </button>
+              <button style={s.btn({ background: permission === "granted" ? "#15803d" : "#94a3b8" })}
+                onClick={() => notify("react-interaction-hooks", { body: "Hello from useNotification!" })}
+                disabled={permission !== "granted"}>
+                Send
+              </button>
+            </div>
+            <div style={s.val}>permission: <strong>{permission}</strong></div>
+          </>
+      }
+    </DemoCard>
+  );
+}
+
+function ReducedMotionDemo() {
+  const reduced = useReducedMotion();
+  return (
+    <DemoCard hookName="useReducedMotion" hint="Toggle 'Reduce motion' in OS accessibility settings" code={
+`const reduced = useReducedMotion()
+// true when user prefers reduced motion`}>
+      <div style={s.box({ background: "#f8fafc", flexDirection: "column", gap: "10px" })}>
+        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#6366f1", animation: reduced ? "none" : "spin 1s linear infinite" }} />
+        <span style={{ fontSize: "13px", color: "#64748b" }}>{reduced ? "Animation disabled (reduced motion)" : "Animation running"}</span>
+      </div>
+    </DemoCard>
+  );
+}
+
+function ColorSchemeDemo() {
+  const scheme = useColorScheme();
+  return (
+    <DemoCard hookName="useColorScheme" hint="Change OS dark/light mode preference" code={
+`const scheme = useColorScheme() // "dark" | "light"`}>
+      <div style={{ ...s.val, display: "flex", alignItems: "center", gap: "8px", background: scheme === "dark" ? "#0f172a" : "#f8fafc", color: scheme === "dark" ? "#f1f5f9" : "#0f172a", border: `1px solid ${scheme === "dark" ? "#334155" : "#e2e8f0"}` }}>
+        {scheme === "dark" ? <Moon size={14} /> : <Sun size={14} />}
+        {scheme === "dark" ? "Dark mode" : "Light mode"}
+      </div>
+    </DemoCard>
+  );
+}
+
+function GamepadDemo() {
+  const { gamepads, connected } = useGamepad();
+  return (
+    <DemoCard hookName="useGamepad" hint="Connect a gamepad and press any button" code={
+`const { gamepads, connected } = useGamepad()`}>
+      <div style={{ ...s.val, display: "flex", alignItems: "center", gap: "8px", background: connected ? "#f0fdf4" : "#f8fafc", border: `1px solid ${connected ? "#bbf7d0" : "#e8ecf0"}`, color: connected ? "#15803d" : "#94a3b8" }}>
+        <Gamepad2 size={14} />
+        {connected ? `${gamepads.length} gamepad connected` : "No gamepad detected"}
+      </div>
+    </DemoCard>
+  );
+}
+
+function SpeechRecognitionDemo() {
+  const { supported, listening, transcript, start, stop, reset } = useSpeechRecognition();
+  return (
+    <DemoCard hookName="useSpeechRecognition" hint="Chrome/Edge only" code={
+`const { listening, transcript, start, stop } = useSpeechRecognition()`}>
+      {!supported
+        ? <div style={s.val}>Not supported in this browser</div>
+        : <>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+              <button style={s.btn({ background: listening ? "#dc2626" : "#6366f1" })} onClick={listening ? stop : start}>
+                {listening ? <><MicOff size={13} /> Stop</> : <><Mic size={13} /> Start</>}
+              </button>
+              <button style={s.btn({ background: "#64748b" })} onClick={reset}><RotateCcw size={13} /></button>
+            </div>
+            <div style={s.val}>{transcript || <span style={{ color: "#94a3b8" }}>Start speaking…</span>}</div>
+          </>
+      }
+    </DemoCard>
+  );
+}
+
+function SpeechSynthesisDemo() {
+  const { supported, speaking, speak, cancel } = useSpeechSynthesis();
+  const [text, setText] = useState("Hello from react-interaction-hooks!");
+  return (
+    <DemoCard hookName="useSpeechSynthesis" code={
+`const { speak, speaking, cancel } = useSpeechSynthesis()
+speak("Hello world", { rate: 1, pitch: 1 })`}>
+      {!supported
+        ? <div style={s.val}>Not supported in this browser</div>
+        : <>
+            <input value={text} onChange={e => setText(e.target.value)}
+              style={{ width: "100%", padding: "10px 14px", borderRadius: "9px", border: "1.5px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", marginBottom: "10px" }} />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button style={s.btn()} onClick={() => speak(text)} disabled={speaking}>
+                <Volume2 size={13} /> Speak
+              </button>
+              <button style={s.btn({ background: "#64748b" })} onClick={cancel} disabled={!speaking}>Stop</button>
+            </div>
+          </>
+      }
+    </DemoCard>
+  );
+}
+
+function EyeDropperDemo() {
+  const { supported, color, open } = useEyeDropper();
+  return (
+    <DemoCard hookName="useEyeDropper" hint="Chrome 95+ only" code={
+`const { supported, color, open } = useEyeDropper()
+const hex = await open()`}>
+      {!supported
+        ? <div style={s.val}>EyeDropper API not supported in this browser</div>
+        : <>
+            <button style={s.btn({ marginBottom: "12px" })} onClick={open}>
+              <Pipette size={13} /> Pick Color
+            </button>
+            <div style={{ ...s.val, display: "flex", alignItems: "center", gap: "10px" }}>
+              {color && <div style={{ width: 28, height: 28, borderRadius: "6px", background: color, border: "2px solid #e2e8f0", flexShrink: 0 }} />}
+              <span>{color ?? <span style={{ color: "#94a3b8" }}>no color picked</span>}</span>
+            </div>
+          </>
+      }
+    </DemoCard>
+  );
+}
+
+function FocusReturnDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <DemoCard hookName="useFocusReturn" hint="Focus the button, open modal, close — focus returns" code={
+`function Modal({ onClose }) {
+  useFocusReturn() // restores focus on unmount
+  return <dialog>...</dialog>
+}`}>
+      <button style={s.btn({ marginBottom: "12px" })} onClick={() => setOpen(true)}>Open Modal</button>
+      {open && <FocusReturnModal onClose={() => setOpen(false)} />}
+    </DemoCard>
+  );
+}
+
+function FocusReturnModal({ onClose }: { onClose: () => void }) {
+  useFocusReturn();
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+      <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", minWidth: "280px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+        <div style={{ fontWeight: 600, marginBottom: "12px" }}>Modal</div>
+        <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "16px" }}>Focus will return to the trigger button when closed.</p>
+        <button style={s.btn()} onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+}
+
+function TabFocusDemo() {
+  const isTabFocused = useTabFocus();
+  return (
+    <DemoCard hookName="useTabFocus" hint="Navigate with Tab key vs clicking — style changes" code={
+`const isTabFocused = useTabFocus()
+// true when user navigates with keyboard`}>
+      <div style={s.val}>Navigation mode: <strong style={{ color: isTabFocused ? "#6366f1" : "#64748b" }}>{isTabFocused ? "Keyboard (Tab)" : "Mouse/Touch"}</strong></div>
+      <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+        {["Button A", "Button B", "Button C"].map(label => (
+          <button key={label} style={{ padding: "8px 14px", borderRadius: "8px", border: `2px solid ${isTabFocused ? "#6366f1" : "#e2e8f0"}`, background: "#f8fafc", cursor: "pointer", fontSize: "13px" }}>{label}</button>
+        ))}
+      </div>
+    </DemoCard>
+  );
+}
+
+function ContainerQueryDemo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const matches = useContainerQuery(ref, { sm: 300, md: 450, lg: 600 });
+  return (
+    <DemoCard hookName="useContainerQuery" hint="Resize browser window to see breakpoints change" code={
+`const matches = useContainerQuery(ref, {
+  sm: 300, md: 450, lg: 600
+})`}>
+      <div ref={ref} style={{ border: "1.5px dashed #cbd5e1", borderRadius: "12px", padding: "16px" }}>
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+          {Object.entries(matches).map(([key, active]) => (
+            <span key={key} style={{ ...s.chip(active), fontSize: "12px" }}>{key}: {active ? "✓" : "✗"}</span>
+          ))}
+        </div>
+      </div>
+    </DemoCard>
+  );
+}
+
 // ─── Sections ─────────────────────────────────────────────────────────────────
 
 const sections: Array<{ id: string; label: string; Icon: LucideIcon; demos: ReactNode[] }> = [
   { id: "pointer", label: "Pointer & Mouse", Icon: Mouse,
-    demos: [<OutsideClickDemo />, <HoverDemo />, <DragDemo />, <PointerPositionDemo />, <ContextMenuDemo />, <MouseLeaveWindowDemo />] },
+    demos: [<OutsideClickDemo />, <HoverDemo />, <DragDemo />, <PointerPositionDemo />, <ContextMenuDemo />, <MouseLeaveWindowDemo />, <DoubleClickDemo />, <PointerLockDemo />] },
   { id: "touch", label: "Touch", Icon: Hand,
     demos: [<SwipeDemo />, <DoubleTapDemo />, <PinchDemo />, <LongPressDemo />] },
   { id: "keyboard", label: "Keyboard", Icon: Keyboard,
-    demos: [<KeyPressDemo />, <KeyComboDemo />, <ArrowNavDemo />, <FocusTrapDemo />] },
+    demos: [<KeyPressDemo />, <KeyComboDemo />, <ArrowNavDemo />, <FocusTrapDemo />, <KeySequenceDemo />] },
   { id: "focus", label: "Focus & Visibility", Icon: Eye,
-    demos: [<FocusWithinDemo />, <IntersectionDemo />, <IdleDemo />, <PageVisibilityDemo />] },
+    demos: [<FocusWithinDemo />, <IntersectionDemo />, <IdleDemo />, <PageVisibilityDemo />, <FocusReturnDemo />, <TabFocusDemo />] },
   { id: "scroll", label: "Scroll", Icon: ScrollText,
-    demos: [<ScrollPositionDemo />, <ScrollDirectionDemo />, <ScrollProgressDemo />, <ScrollLockDemo />] },
-  { id: "resize", label: "Resize", Icon: Maximize2,
-    demos: [<ResizeObserverDemo />, <WindowSizeDemo />] },
+    demos: [<ScrollPositionDemo />, <ScrollDirectionDemo />, <ScrollProgressDemo />, <ScrollLockDemo />, <ScrollIntoViewDemo />, <ScrollSpyDemo />, <InfiniteScrollDemo />] },
+  { id: "resize", label: "Resize & DOM", Icon: Maximize2,
+    demos: [<ResizeObserverDemo />, <WindowSizeDemo />, <ElementSizeDemo />, <ElementPositionDemo />, <ContainerQueryDemo />, <MutationObserverDemo />, <FullscreenDemo />] },
   { id: "media", label: "Clipboard & Media", Icon: Clipboard,
-    demos: [<CopyDemo />, <MediaQueryDemo />, <TextSelectionDemo />, <DropZoneDemo />] },
+    demos: [<CopyDemo />, <MediaQueryDemo />, <TextSelectionDemo />, <DropZoneDemo />, <PasteDemo />, <ShareDemo />, <PermissionDemo />, <NotificationDemo />, <ReducedMotionDemo />, <ColorSchemeDemo />] },
   { id: "device", label: "Device & Sensors", Icon: Cpu,
-    demos: [<DeviceOrientationDemo />, <GeolocationDemo />, <NetworkStatusDemo />, <BatteryDemo />, <VibrateDemo />] },
+    demos: [<DeviceOrientationDemo />, <GeolocationDemo />, <NetworkStatusDemo />, <BatteryDemo />, <VibrateDemo />, <WakeLockDemo />, <GamepadDemo />, <SpeechRecognitionDemo />, <SpeechSynthesisDemo />, <EyeDropperDemo />] },
+  { id: "timing", label: "Timing", Icon: Timer,
+    demos: [<DebounceDemo />, <ThrottleDemo />, <IntervalDemo />, <TimeoutDemo />, <AnimationFrameDemo />, <CountdownDemo />] },
 ];
 
 // ─── App ─────────────────────────────────────────────────────────────────────
@@ -860,7 +1430,7 @@ export default function App() {
       <header style={s.header}>
         <div style={s.headerLeft}>
           <span style={s.headerTitle}>react-interaction-hooks</span>
-          <span style={s.headerSub}>33 hooks · zero dependencies · tree-shakeable</span>
+          <span style={s.headerSub}>65 hooks · zero dependencies · tree-shakeable</span>
         </div>
         <a
           href="https://www.npmjs.com/package/@sharpbits/react-interaction-hooks"

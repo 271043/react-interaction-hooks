@@ -771,5 +771,588 @@ function useTextSelection() {
   }, []);
   return selection;
 }
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}
+function useThrottle(value, delay) {
+  const [throttled, setThrottled] = useState(value);
+  const lastRan = useRef(Date.now());
+  useEffect(() => {
+    const remaining = delay - (Date.now() - lastRan.current);
+    if (remaining <= 0) {
+      setThrottled(value);
+      lastRan.current = Date.now();
+    } else {
+      const timer = setTimeout(() => {
+        setThrottled(value);
+        lastRan.current = Date.now();
+      }, remaining);
+      return () => clearTimeout(timer);
+    }
+  }, [value, delay]);
+  return throttled;
+}
+function useInterval(callback, delay) {
+  const savedCallback = useRef(callback);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    if (delay === null) return;
+    const id = setInterval(() => savedCallback.current(), delay);
+    return () => clearInterval(id);
+  }, [delay]);
+}
+function useTimeout(callback, delay) {
+  const savedCallback = useRef(callback);
+  const timerRef = useRef(null);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  const clear = useCallback(() => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+  const reset = useCallback(() => {
+    clear();
+    timerRef.current = setTimeout(() => savedCallback.current(), delay);
+  }, [clear, delay]);
+  useEffect(() => {
+    reset();
+    return clear;
+  }, [reset, clear]);
+  return { reset, clear };
+}
+function useAnimationFrame(callback) {
+  const savedCallback = useRef(callback);
+  const rafRef = useRef(0);
+  const lastTimeRef = useRef(null);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    const loop = (time) => {
+      const delta = lastTimeRef.current !== null ? time - lastTimeRef.current : 0;
+      lastTimeRef.current = time;
+      savedCallback.current(delta);
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    rafRef.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+}
+function useCountdown(initialSeconds) {
+  const [count, setCount] = useState(initialSeconds);
+  const [running, setRunning] = useState(false);
+  const intervalRef = useRef(null);
+  const stop = useCallback(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setRunning(false);
+  }, []);
+  const start = useCallback(() => {
+    if (intervalRef.current !== null) return;
+    setRunning(true);
+    intervalRef.current = setInterval(() => {
+      setCount((c) => {
+        if (c <= 1) {
+          stop();
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1e3);
+  }, [stop]);
+  const reset = useCallback(() => {
+    stop();
+    setCount(initialSeconds);
+  }, [stop, initialSeconds]);
+  return { count, running, start, stop, reset };
+}
+function useMutationObserver(ref, callback, options = { childList: true, subtree: true }) {
+  const savedCallback = useRef(callback);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new MutationObserver(
+      (mutations, obs) => savedCallback.current(mutations, obs)
+    );
+    observer.observe(el, options);
+    return () => observer.disconnect();
+  }, [ref, options]);
+}
+function useElementSize(ref) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      setSize({ width: rect.width, height: rect.height });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+  return size;
+}
+var INITIAL = {
+  x: 0,
+  y: 0,
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: 0,
+  height: 0
+};
+function useElementPosition(ref) {
+  const [pos, setPos] = useState(INITIAL);
+  const update = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos({
+      x: r.x,
+      y: r.y,
+      top: r.top,
+      left: r.left,
+      right: r.right,
+      bottom: r.bottom,
+      width: r.width,
+      height: r.height
+    });
+  }, [ref]);
+  useEffect(() => {
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [update]);
+  return pos;
+}
+function useFullscreen(ref) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+  const enter = useCallback(async () => {
+    var _a;
+    await ((_a = ref.current) == null ? void 0 : _a.requestFullscreen());
+  }, [ref]);
+  const exit = useCallback(async () => {
+    if (document.fullscreenElement) await document.exitFullscreen();
+  }, []);
+  const toggle = useCallback(async () => {
+    var _a;
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await ((_a = ref.current) == null ? void 0 : _a.requestFullscreen());
+  }, [ref]);
+  return { isFullscreen, enter, exit, toggle };
+}
+function useWakeLock() {
+  const supported = "wakeLock" in navigator;
+  const [active, setActive] = useState(false);
+  const lockRef = { current: null };
+  const request = useCallback(async () => {
+    if (!supported) return;
+    try {
+      lockRef.current = await navigator.wakeLock.request("screen");
+      lockRef.current.addEventListener("release", () => setActive(false));
+      setActive(true);
+    } catch (e) {
+      setActive(false);
+    }
+  }, [supported]);
+  const release = useCallback(async () => {
+    var _a;
+    await ((_a = lockRef.current) == null ? void 0 : _a.release());
+    lockRef.current = null;
+    setActive(false);
+  }, []);
+  useEffect(() => {
+    const reacquire = () => {
+      if (active) request();
+    };
+    document.addEventListener("visibilitychange", reacquire);
+    return () => document.removeEventListener("visibilitychange", reacquire);
+  }, [active, request]);
+  return { supported, active, request, release };
+}
+function usePaste(callback) {
+  const savedCallback = useRef(callback);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    const handler = (e) => {
+      var _a, _b;
+      const text = (_b = (_a = e.clipboardData) == null ? void 0 : _a.getData("text")) != null ? _b : "";
+      savedCallback.current(text, e);
+    };
+    document.addEventListener("paste", handler);
+    return () => document.removeEventListener("paste", handler);
+  }, []);
+}
+function useDoubleClick(ref, callback, options = {}) {
+  const { threshold = 300 } = options;
+  const savedCallback = useRef(callback);
+  const lastClick = useRef(0);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const handler = (e) => {
+      const now = Date.now();
+      if (now - lastClick.current < threshold) {
+        savedCallback.current(e);
+        lastClick.current = 0;
+      } else {
+        lastClick.current = now;
+      }
+    };
+    el.addEventListener("click", handler);
+    return () => el.removeEventListener("click", handler);
+  }, [ref, threshold]);
+}
+function usePointerLock(ref) {
+  const [isLocked, setIsLocked] = useState(false);
+  useEffect(() => {
+    const onLock = () => setIsLocked(!!document.pointerLockElement);
+    const onError = () => setIsLocked(false);
+    document.addEventListener("pointerlockchange", onLock);
+    document.addEventListener("pointerlockerror", onError);
+    return () => {
+      document.removeEventListener("pointerlockchange", onLock);
+      document.removeEventListener("pointerlockerror", onError);
+    };
+  }, []);
+  const lock = useCallback(async () => {
+    var _a;
+    await ((_a = ref.current) == null ? void 0 : _a.requestPointerLock());
+  }, [ref]);
+  const unlock = useCallback(() => {
+    if (document.pointerLockElement) document.exitPointerLock();
+  }, []);
+  return { isLocked, lock, unlock };
+}
+function useKeySequence(sequence, callback) {
+  const savedCallback = useRef(callback);
+  const progress = useRef(0);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === sequence[progress.current]) {
+        progress.current += 1;
+        if (progress.current === sequence.length) {
+          savedCallback.current();
+          progress.current = 0;
+        }
+      } else {
+        progress.current = e.key === sequence[0] ? 1 : 0;
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [sequence]);
+}
+function useScrollIntoView(ref, options = { behavior: "smooth", block: "center" }) {
+  return useCallback(() => {
+    var _a;
+    (_a = ref.current) == null ? void 0 : _a.scrollIntoView(options);
+  }, [ref, options]);
+}
+function useScrollSpy(refs, options = {}) {
+  const { threshold = 0.5, rootMargin = "0px" } = options;
+  const [activeIndex, setActiveIndex] = useState(0);
+  useEffect(() => {
+    const observers = [];
+    refs.forEach((ref, index) => {
+      const el = ref.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveIndex(index);
+        },
+        { threshold, rootMargin }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+    return () => observers.forEach((o) => o.disconnect());
+  }, [refs, threshold, rootMargin]);
+  return activeIndex;
+}
+function useInfiniteScroll(ref, onLoadMore, options = {}) {
+  const { threshold = 0.1, rootMargin = "0px" } = options;
+  const [loading, setLoading] = useState(false);
+  const savedCallback = useRef(onLoadMore);
+  useEffect(() => {
+    savedCallback.current = onLoadMore;
+  }, [onLoadMore]);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      async ([entry]) => {
+        if (entry.isIntersecting && !loading) {
+          setLoading(true);
+          await savedCallback.current();
+          setLoading(false);
+        }
+      },
+      { threshold, rootMargin }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, loading, threshold, rootMargin]);
+  return { loading };
+}
+function useShare() {
+  const supported = "share" in navigator;
+  const share = useCallback(async (data) => {
+    if (!supported) return;
+    await navigator.share(data);
+  }, [supported]);
+  return { supported, share };
+}
+function usePermission(name) {
+  const [state, setState] = useState(null);
+  useEffect(() => {
+    if (!("permissions" in navigator)) return;
+    let permissionStatus;
+    navigator.permissions.query({ name }).then((status) => {
+      permissionStatus = status;
+      setState(status.state);
+      status.onchange = () => setState(status.state);
+    }).catch(() => {
+    });
+    return () => {
+      if (permissionStatus) permissionStatus.onchange = null;
+    };
+  }, [name]);
+  return state;
+}
+function useNotification() {
+  const supported = "Notification" in window;
+  const [permission, setPermission] = useState(
+    supported ? Notification.permission : "denied"
+  );
+  const requestPermission = useCallback(async () => {
+    if (!supported) return "denied";
+    const result = await Notification.requestPermission();
+    setPermission(result);
+    return result;
+  }, [supported]);
+  const notify = useCallback(
+    (title, options) => {
+      if (!supported || permission !== "granted") return null;
+      return new Notification(title, options);
+    },
+    [supported, permission]
+  );
+  return { permission, supported, requestPermission, notify };
+}
+function useReducedMotion() {
+  const query = "(prefers-reduced-motion: reduce)";
+  const [matches, setMatches] = useState(
+    () => window.matchMedia(query).matches
+  );
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = (e) => setMatches(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return matches;
+}
+function useColorScheme() {
+  const [scheme, setScheme] = useState(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  );
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e) => setScheme(e.matches ? "dark" : "light");
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return scheme;
+}
+function useGamepad() {
+  const [gamepads, setGamepads] = useState([]);
+  useEffect(() => {
+    const update = () => {
+      const list = Array.from(navigator.getGamepads()).filter(
+        (g) => g !== null
+      );
+      setGamepads(list);
+    };
+    window.addEventListener("gamepadconnected", update);
+    window.addEventListener("gamepaddisconnected", update);
+    return () => {
+      window.removeEventListener("gamepadconnected", update);
+      window.removeEventListener("gamepaddisconnected", update);
+    };
+  }, []);
+  return { gamepads, connected: gamepads.length > 0 };
+}
+function getSR() {
+  var _a;
+  const w = window;
+  return (_a = w.SpeechRecognition) != null ? _a : w.webkitSpeechRecognition;
+}
+function useSpeechRecognition(lang = "en-US") {
+  const SR = getSR();
+  const supported = !!SR;
+  const [listening, setListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
+  const recogRef = useRef(null);
+  useEffect(() => {
+    if (!SR) return;
+    const recog = new SR();
+    recog.continuous = true;
+    recog.interimResults = true;
+    recog.lang = lang;
+    recog.onresult = (e) => {
+      const text = Array.from(e.results).map((r) => r[0].transcript).join("");
+      setTranscript(text);
+    };
+    recog.onend = () => setListening(false);
+    recogRef.current = recog;
+    return () => recog.stop();
+  }, [SR, lang]);
+  const start = useCallback(() => {
+    var _a;
+    (_a = recogRef.current) == null ? void 0 : _a.start();
+    setListening(true);
+  }, []);
+  const stop = useCallback(() => {
+    var _a;
+    (_a = recogRef.current) == null ? void 0 : _a.stop();
+    setListening(false);
+  }, []);
+  const reset = useCallback(() => setTranscript(""), []);
+  return { supported, listening, transcript, start, stop, reset };
+}
+function useSpeechSynthesis() {
+  const supported = "speechSynthesis" in window;
+  const [speaking, setSpeaking] = useState(false);
+  const [voices, setVoices] = useState([]);
+  useEffect(() => {
+    if (!supported) return;
+    const load = () => setVoices(window.speechSynthesis.getVoices());
+    load();
+    window.speechSynthesis.addEventListener("voiceschanged", load);
+    return () => window.speechSynthesis.removeEventListener("voiceschanged", load);
+  }, [supported]);
+  const speak = useCallback((text, options = {}) => {
+    if (!supported) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (options.voice) utterance.voice = options.voice;
+    if (options.rate !== void 0) utterance.rate = options.rate;
+    if (options.pitch !== void 0) utterance.pitch = options.pitch;
+    if (options.volume !== void 0) utterance.volume = options.volume;
+    if (options.lang) utterance.lang = options.lang;
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+  }, [supported]);
+  const cancel = useCallback(() => {
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+  }, []);
+  return { supported, speaking, voices, speak, cancel };
+}
+function getEyeDropper() {
+  return window.EyeDropper;
+}
+function useEyeDropper() {
+  const EyeDropper = getEyeDropper();
+  const supported = !!EyeDropper;
+  const [color, setColor] = useState(null);
+  const open = useCallback(async () => {
+    if (!EyeDropper) return null;
+    try {
+      const result = await new EyeDropper().open();
+      setColor(result.sRGBHex);
+      return result.sRGBHex;
+    } catch (e) {
+      return null;
+    }
+  }, [EyeDropper]);
+  return { supported, color, open };
+}
+function useFocusReturn() {
+  const returnRef = useRef(null);
+  useEffect(() => {
+    returnRef.current = document.activeElement;
+    return () => {
+      var _a;
+      (_a = returnRef.current) == null ? void 0 : _a.focus();
+    };
+  }, []);
+}
+function useTabFocus() {
+  const [isTabFocused, setIsTabFocused] = useState(false);
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Tab") setIsTabFocused(true);
+    };
+    const onMouseDown = () => setIsTabFocused(false);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("mousedown", onMouseDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", onMouseDown);
+    };
+  }, []);
+  return isTabFocused;
+}
+function useContainerQuery(ref, breakpoints) {
+  const [matches, setMatches] = useState(
+    () => Object.fromEntries(Object.keys(breakpoints).map((k) => [k, false]))
+  );
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const { width } = el.getBoundingClientRect();
+      setMatches(
+        Object.fromEntries(
+          Object.entries(breakpoints).map(([k, minWidth]) => [k, width >= minWidth])
+        )
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, breakpoints]);
+  return matches;
+}
 
-export { useArrowNavigation, useBattery, useContextMenu, useCopyToClipboard, useDeviceOrientation, useDoubleTap, useDrag, useDropZone, useFocusTrap, useFocusWithin, useGeolocation, useHover, useIdle, useIntersectionObserver, useKeyCombo, useKeyPress, useLongPress, useMediaQuery, useMouseLeaveWindow, useNetworkStatus, useOutsideClick, usePageVisibility, usePinch, usePointerPosition, useResizeObserver, useScrollDirection, useScrollLock, useScrollPosition, useScrollProgress, useSwipe, useTextSelection, useVibrate, useWindowSize };
+export { useAnimationFrame, useArrowNavigation, useBattery, useColorScheme, useContainerQuery, useContextMenu, useCopyToClipboard, useCountdown, useDebounce, useDeviceOrientation, useDoubleClick, useDoubleTap, useDrag, useDropZone, useElementPosition, useElementSize, useEyeDropper, useFocusReturn, useFocusTrap, useFocusWithin, useFullscreen, useGamepad, useGeolocation, useHover, useIdle, useInfiniteScroll, useIntersectionObserver, useInterval, useKeyCombo, useKeyPress, useKeySequence, useLongPress, useMediaQuery, useMouseLeaveWindow, useMutationObserver, useNetworkStatus, useNotification, useOutsideClick, usePageVisibility, usePaste, usePermission, usePinch, usePointerLock, usePointerPosition, useReducedMotion, useResizeObserver, useScrollDirection, useScrollIntoView, useScrollLock, useScrollPosition, useScrollProgress, useScrollSpy, useShare, useSpeechRecognition, useSpeechSynthesis, useSwipe, useTabFocus, useTextSelection, useThrottle, useTimeout, useVibrate, useWakeLock, useWindowSize };

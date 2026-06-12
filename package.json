@@ -4,6 +4,11 @@
   "description": "A collection of 33 React hooks for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more. Zero dependencies, tree-shakeable, lightweight, and blazing fast.",
   "author": "sharp0637794267@gmail.com",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/271043/react-interaction-hooks.git"
+  },
+  "homepage": "https://271043.github.io/react-interaction-hooks/",
   "keywords": [
     "react",
     "hooks",
