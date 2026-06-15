@@ -5,6 +5,11 @@ interface TextSelectionState {
   rect: DOMRect | null;
 }
 
+/**
+ * Returns the current text selection text and bounding DOMRect, updating on selectionchange events.
+ *
+ * @returns Object with text (selected string) and rect (DOMRect | null).
+ */
 export function useTextSelection(): TextSelectionState {
   const [selection, setSelection] = useState<TextSelectionState>({ text: "", rect: null });
 

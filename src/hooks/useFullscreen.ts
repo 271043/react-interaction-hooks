@@ -7,6 +7,12 @@ interface UseFullscreenReturn {
   toggle: () => Promise<void>;
 }
 
+/**
+ * Returns {isFullscreen, enter, exit, toggle} for managing the Fullscreen API on the referenced element.
+ *
+ * @param ref - RefObject attached to the element to fullscreen.
+ * @returns Object with isFullscreen boolean, enter(), exit(), toggle() async functions.
+ */
 export function useFullscreen<T extends HTMLElement>(
   ref: RefObject<T>
 ): UseFullscreenReturn {

@@ -6,6 +6,12 @@ interface DragState {
   position: { x: number; y: number };
 }
 
+/**
+ * Tracks mouse drag state (isDragging, delta, position) on the referenced element.
+ *
+ * @param ref - RefObject attached to the draggable element.
+ * @returns Object with isDragging boolean, delta {x,y} from drag start, position {x,y} current pointer.
+ */
 export function useDrag<T extends HTMLElement>(ref: RefObject<T>): DragState {
   const [state, setState] = useState<DragState>({
     isDragging: false,

@@ -10,6 +10,13 @@ interface DropZoneState {
   isOver: boolean;
 }
 
+/**
+ * Attaches drag-and-drop file handlers to the referenced element, returning isOver state.
+ *
+ * @param ref - RefObject attached to the drop target element.
+ * @param options - onDrop callback (required), optional onDragOver and onDragLeave.
+ * @returns Object with isOver boolean.
+ */
 export function useDropZone<T extends HTMLElement>(
   ref: RefObject<T>,
   options: UseDropZoneOptions

@@ -16,6 +16,11 @@ interface BatteryManager extends EventTarget {
   dischargingTime: number;
 }
 
+/**
+ * Returns battery level, charging state, and charge timing from the Battery Status API.
+ *
+ * @returns Object with supported, loading, level, charging, chargingTime, dischargingTime.
+ */
 export function useBattery(): BatteryState {
   const [state, setState] = useState<BatteryState>({
     supported: "getBattery" in navigator,

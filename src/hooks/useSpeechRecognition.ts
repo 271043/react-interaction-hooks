@@ -35,6 +35,12 @@ interface UseSpeechRecognitionReturn {
   reset: () => void;
 }
 
+/**
+ * Returns {supported, listening, transcript, start, stop, reset} for browser speech-to-text (Web Speech API).
+ *
+ * @param lang - BCP 47 language tag (default "en-US").
+ * @returns Object with supported boolean, listening boolean, transcript string, start(), stop(), reset().
+ */
 export function useSpeechRecognition(lang = "en-US"): UseSpeechRecognitionReturn {
   const SR = getSR();
   const supported = !!SR;

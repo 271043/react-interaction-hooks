@@ -2,6 +2,12 @@ import { useEffect, useState, useRef } from "react";
 
 const ACTIVITY_EVENTS = ["mousemove", "keydown", "mousedown", "touchstart", "scroll", "wheel"] as const;
 
+/**
+ * Returns true when no user activity (mouse, keyboard, scroll, touch) has occurred for timeout ms.
+ *
+ * @param timeout - Inactivity duration in ms before considered idle.
+ * @returns boolean — true when user has been idle for timeout ms.
+ */
 export function useIdle(timeout: number): boolean {
   const [isIdle, setIsIdle] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

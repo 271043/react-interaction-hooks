@@ -7,6 +7,13 @@ interface UseSwipeOptions {
   onSwipe: (direction: SwipeDirection) => void;
 }
 
+/**
+ * Detects horizontal/vertical swipe direction on touch end for the referenced element.
+ *
+ * @param ref - RefObject attached to the swipe target.
+ * @param options - onSwipe callback (required), optional threshold in px (default 50).
+ * @returns void
+ */
 export function useSwipe<T extends HTMLElement>(
   ref: RefObject<T>,
   options: UseSwipeOptions

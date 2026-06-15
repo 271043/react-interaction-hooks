@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 
 type ScrollDirection = "up" | "down" | null;
 
+/**
+ * Returns "up" or "down" based on the last window scroll movement, null initially.
+ *
+ * @returns "up" | "down" | null
+ */
 export function useScrollDirection(): ScrollDirection {
   const [direction, setDirection] = useState<ScrollDirection>(null);
   const lastY = useRef(0);

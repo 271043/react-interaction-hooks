@@ -5,6 +5,13 @@ interface UseScrollSpyOptions {
   rootMargin?: string;
 }
 
+/**
+ * Returns the index of the ref most visible in the viewport using IntersectionObserver.
+ *
+ * @param refs - Array of RefObjects to observe.
+ * @param options - Optional threshold and rootMargin.
+ * @returns number — index of currently intersecting ref (0 initially).
+ */
 export function useScrollSpy(
   refs: RefObject<HTMLElement>[],
   options: UseScrollSpyOptions = {}

@@ -1,5 +1,11 @@
 import { useEffect, useState, RefObject } from "react";
 
+/**
+ * Returns true when any descendant of the referenced element currently has focus.
+ *
+ * @param ref - RefObject attached to the container element.
+ * @returns boolean — true while focus is anywhere inside the element.
+ */
 export function useFocusWithin<T extends HTMLElement>(ref: RefObject<T>): boolean {
   const [isFocusWithin, setIsFocusWithin] = useState(false);
 

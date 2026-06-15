@@ -18,6 +18,13 @@ function getMidpoint(t1: Touch, t2: Touch) {
   return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
 }
 
+/**
+ * Detects two-finger pinch-zoom gestures on the referenced element via touch events.
+ *
+ * @param ref - RefObject attached to the pinch target.
+ * @param options - onPinch callback with scale and origin, optional onPinchEnd.
+ * @returns void
+ */
 export function usePinch<T extends HTMLElement>(
   ref: RefObject<T>,
   options: UsePinchOptions

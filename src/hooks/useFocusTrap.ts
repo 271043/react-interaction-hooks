@@ -9,6 +9,13 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(", ");
 
+/**
+ * Traps Tab and Shift+Tab focus within the referenced element when enabled, auto-focusing the first focusable item.
+ *
+ * @param ref - RefObject attached to the container element.
+ * @param enabled - When false, disables the trap. Defaults to true.
+ * @returns void
+ */
 export function useFocusTrap<T extends HTMLElement>(
   ref: RefObject<T>,
   enabled = true

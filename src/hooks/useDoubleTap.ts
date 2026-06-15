@@ -4,6 +4,14 @@ interface UseDoubleTapOptions {
   threshold?: number;
 }
 
+/**
+ * Calls callback on double-tap within threshold ms on the referenced element.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @param callback - Called with the TouchEvent on double-tap.
+ * @param options - Optional threshold in ms (default 300).
+ * @returns void
+ */
 export function useDoubleTap<T extends HTMLElement>(
   ref: RefObject<T>,
   callback: (event: TouchEvent) => void,

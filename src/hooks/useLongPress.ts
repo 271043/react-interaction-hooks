@@ -6,6 +6,14 @@ interface UseLongPressOptions {
   onCancel?: () => void;
 }
 
+/**
+ * Calls callback when a pointer is held down for longer than threshold ms, on mouse and touch.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @param callback - Called after threshold ms of continuous press.
+ * @param options - Optional threshold ms (default 500), onStart, onCancel callbacks.
+ * @returns void
+ */
 export function useLongPress<T extends HTMLElement>(
   ref: RefObject<T>,
   callback: () => void,

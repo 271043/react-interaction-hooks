@@ -7,6 +7,11 @@ interface PointerPosition {
   clientY: number;
 }
 
+/**
+ * Returns the current mouse pointer position as page coordinates and client coordinates.
+ *
+ * @returns Object with x (pageX), y (pageY), clientX, clientY — all 0 initially.
+ */
 export function usePointerPosition(): PointerPosition {
   const [position, setPosition] = useState<PointerPosition>({
     x: 0,

@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 
+/**
+ * Prevents body scrolling when locked is true; restores scroll position and styles on unlock.
+ *
+ * @param locked - When true, applies overflow:hidden + position:fixed to document.body.
+ * @returns void
+ */
 export function useScrollLock(locked: boolean): void {
   useEffect(() => {
     if (!locked) return;

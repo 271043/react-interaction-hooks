@@ -5,6 +5,13 @@ interface UseHoverOptions {
   leaveDelay?: number;
 }
 
+/**
+ * Returns true while the pointer hovers over the referenced element, with optional enter/leave delays.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @param options - Optional enterDelay and leaveDelay in ms.
+ * @returns boolean — true when hovered.
+ */
 export function useHover<T extends HTMLElement>(
   ref: RefObject<T>,
   options: UseHoverOptions = {}

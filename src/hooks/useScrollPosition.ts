@@ -5,6 +5,11 @@ interface ScrollPosition {
   y: number;
 }
 
+/**
+ * Returns the current window scroll position, updated on scroll.
+ *
+ * @returns Object with x (scrollX) and y (scrollY) — both 0 initially.
+ */
 export function useScrollPosition(): ScrollPosition {
   const [position, setPosition] = useState<ScrollPosition>({ x: 0, y: 0 });
 

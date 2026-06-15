@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 
+/**
+ * Returns "dark" or "light" based on the user's prefers-color-scheme OS setting.
+ *
+ * @returns "dark" | "light"
+ */
 export function useColorScheme(): "dark" | "light" {
   const [scheme, setScheme] = useState<"dark" | "light">(() =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"

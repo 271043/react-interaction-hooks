@@ -2,11 +2,17 @@ import { useState, useEffect } from "react";
 
 type PermissionState = "granted" | "denied" | "prompt";
 
+/**
+ * Returns the current state ("granted" | "denied" | "prompt") of the named browser permission, or null if unavailable.
+ *
+ * @param name - PermissionName to query (e.g. "camera", "notifications").
+ * @returns PermissionState | null
+ */
 export function usePermission(name: PermissionName): PermissionState | null {
   const [state, setState] = useState<PermissionState | null>(null);
 
   useEffect(() => {
-    if (!("permissions" in navigator)) return;
+    if (!navigator.permissions) return;
     let permissionStatus: PermissionStatus;
 
     navigator.permissions.query({ name }).then((status) => {

@@ -6,6 +6,13 @@ interface UseArrowNavigationOptions {
   loop?: boolean;
 }
 
+/**
+ * Enables arrow-key navigation between focusable items inside the referenced element.
+ *
+ * @param ref - RefObject attached to the container element.
+ * @param options - Optional selector string, orientation ("vertical"|"horizontal"|"both"), loop boolean.
+ * @returns void
+ */
 export function useArrowNavigation<T extends HTMLElement>(
   ref: RefObject<T>,
   options: UseArrowNavigationOptions = {}

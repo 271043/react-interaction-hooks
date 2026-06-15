@@ -5,6 +5,11 @@ interface WindowSize {
   height: number;
 }
 
+/**
+ * Returns the current {width, height} of the browser window, updated on resize.
+ *
+ * @returns Object with width and height matching window.innerWidth/innerHeight.
+ */
 export function useWindowSize(): WindowSize {
   const [size, setSize] = useState<WindowSize>({
     width: window.innerWidth,

@@ -1,5 +1,11 @@
 import { useEffect, useState, RefObject } from "react";
 
+/**
+ * Returns a 0–1 value representing scroll progress of the window or a specific element.
+ *
+ * @param ref - Optional RefObject for an element; omit to use window scroll progress.
+ * @returns number between 0 (top) and 1 (bottom).
+ */
 export function useScrollProgress<T extends HTMLElement>(ref?: RefObject<T>): number {
   const [progress, setProgress] = useState(0);
 

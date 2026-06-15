@@ -15,6 +15,12 @@ const INITIAL: ElementPosition = {
   x: 0, y: 0, top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0,
 };
 
+/**
+ * Returns the DOMRect position (x, y, top, left, right, bottom, width, height) of the referenced element, updated on scroll and resize.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @returns Object with x, y, top, left, right, bottom, width, height (all 0 initially).
+ */
 export function useElementPosition<T extends HTMLElement>(
   ref: RefObject<T>
 ): ElementPosition {

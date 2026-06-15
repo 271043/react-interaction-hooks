@@ -18,6 +18,11 @@ interface UseEyeDropperReturn {
   open: () => Promise<string | null>;
 }
 
+/**
+ * Returns {supported, color, open} for the EyeDropper API to pick a color from the screen.
+ *
+ * @returns Object with supported boolean, color string|null, open() async function returning picked color hex string or null.
+ */
 export function useEyeDropper(): UseEyeDropperReturn {
   const EyeDropper = getEyeDropper();
   const supported = !!EyeDropper;

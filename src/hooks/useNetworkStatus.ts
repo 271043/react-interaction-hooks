@@ -15,6 +15,11 @@ function getConnection() {
   ) as { type?: string; effectiveType?: string; addEventListener: (e: string, fn: () => void) => void; removeEventListener: (e: string, fn: () => void) => void } | null;
 }
 
+/**
+ * Returns {online, type, effectiveType} from navigator.onLine and the Network Information API.
+ *
+ * @returns Object with online boolean, type string|null, effectiveType string|null.
+ */
 export function useNetworkStatus(): NetworkStatus {
   const [status, setStatus] = useState<NetworkStatus>(() => {
     const conn = getConnection();

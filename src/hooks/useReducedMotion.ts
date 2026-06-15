@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 
+/**
+ * Returns true if the user has enabled reduced motion in their OS accessibility settings.
+ *
+ * @returns boolean — matches (prefers-reduced-motion: reduce).
+ */
 export function useReducedMotion(): boolean {
   const query = "(prefers-reduced-motion: reduce)";
   const [matches, setMatches] = useState(

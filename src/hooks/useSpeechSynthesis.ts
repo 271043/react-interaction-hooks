@@ -16,21 +16,28 @@ interface SpeechSynthesisUtteranceInit {
   lang?: string;
 }
 
+/**
+ * Returns {supported, speaking, voices, speak, cancel} for browser text-to-speech (Web Speech API).
+ *
+ * @returns Object with supported boolean, speaking boolean, voices array, speak(text, options?), cancel().
+ */
 export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
-  const supported = "speechSynthesis" in window;
+  const supported = typeof window.speechSynthesis !== "undefined" && !!window.speechSynthesis;
   const [speaking, setSpeaking] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   useEffect(() => {
     if (!supported) return;
-    const load = () => setVoices(window.speechSynthesis.getVoices());
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const load = () => setVoices(synth.getVoices());
     load();
-    window.speechSynthesis.addEventListener("voiceschanged", load);
-    return () => window.speechSynthesis.removeEventListener("voiceschanged", load);
+    synth.addEventListener("voiceschanged", load);
+    return () => synth.removeEventListener("voiceschanged", load);
   }, [supported]);
 
   const speak = useCallback((text: string, options: SpeechSynthesisUtteranceInit = {}) => {
-    if (!supported) return;
+    if (!supported || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     if (options.voice) utterance.voice = options.voice;
@@ -45,6 +52,7 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   }, [supported]);
 
   const cancel = useCallback(() => {
+    if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     setSpeaking(false);
   }, []);

@@ -5,6 +5,12 @@ interface ElementSize {
   height: number;
 }
 
+/**
+ * Returns {width, height} of the referenced element via ResizeObserver and getBoundingClientRect, updated on resize.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @returns Object with width and height (both 0 initially).
+ */
 export function useElementSize<T extends HTMLElement>(
   ref: RefObject<T>
 ): ElementSize {

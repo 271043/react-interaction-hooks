@@ -1,5 +1,13 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Calls callback whenever the DOM subtree of the referenced element mutates.
+ *
+ * @param ref - RefObject attached to the observed element.
+ * @param callback - MutationCallback called with mutations list and observer.
+ * @param options - MutationObserverInit (default: {childList:true, subtree:true}).
+ * @returns void
+ */
 export function useMutationObserver(
   ref: React.RefObject<HTMLElement>,
   callback: MutationCallback,

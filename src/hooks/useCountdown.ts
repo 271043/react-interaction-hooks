@@ -8,6 +8,12 @@ interface UseCountdownReturn {
   reset: () => void;
 }
 
+/**
+ * Counts down from initialSeconds using a 1-second interval, with start/stop/reset controls.
+ *
+ * @param initialSeconds - Starting countdown value in seconds.
+ * @returns Object with count, running, start(), stop(), reset().
+ */
 export function useCountdown(initialSeconds: number): UseCountdownReturn {
   const [count, setCount] = useState(initialSeconds);
   const [running, setRunning] = useState(false);

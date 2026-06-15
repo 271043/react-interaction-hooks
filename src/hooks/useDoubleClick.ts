@@ -4,6 +4,14 @@ interface UseDoubleClickOptions {
   threshold?: number;
 }
 
+/**
+ * Calls callback on custom double-click (two clicks within threshold ms) on the referenced element.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @param callback - Called with the MouseEvent on double-click.
+ * @param options - Optional threshold in ms (default 300).
+ * @returns void
+ */
 export function useDoubleClick<T extends HTMLElement>(
   ref: RefObject<T>,
   callback: (event: MouseEvent) => void,

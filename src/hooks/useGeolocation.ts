@@ -12,6 +12,12 @@ interface UseGeolocationOptions {
   maximumAge?: number;
 }
 
+/**
+ * Returns {loading, position, error} from the Geolocation API watchPosition, updating on location changes.
+ *
+ * @param options - GeolocationPositionOptions (enableHighAccuracy, timeout, maximumAge).
+ * @returns Object with loading boolean, position GeolocationPosition|null, error GeolocationPositionError|null.
+ */
 export function useGeolocation(options: UseGeolocationOptions = {}): GeolocationState {
   const { enableHighAccuracy = false, timeout = Infinity, maximumAge = 0 } = options;
 

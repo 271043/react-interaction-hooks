@@ -7,6 +7,11 @@ interface UseWakeLockReturn {
   release: () => Promise<void>;
 }
 
+/**
+ * Returns {supported, active, request, release} for the Screen Wake Lock API to prevent display sleep.
+ *
+ * @returns Object with supported boolean, active boolean, request() async function, release() async function.
+ */
 export function useWakeLock(): UseWakeLockReturn {
   const supported = "wakeLock" in navigator;
   const [active, setActive] = useState(false);

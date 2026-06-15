@@ -11,8 +11,13 @@ interface UseShareReturn {
   share: (data: ShareData) => Promise<void>;
 }
 
+/**
+ * Returns {supported, share} wrapping the Web Share API; share() is a no-op when unsupported.
+ *
+ * @returns Object with supported boolean and share(data) async function.
+ */
 export function useShare(): UseShareReturn {
-  const supported = "share" in navigator;
+  const supported = typeof navigator.share === "function";
 
   const share = useCallback(async (data: ShareData) => {
     if (!supported) return;

@@ -6,6 +6,12 @@ interface UsePointerLockReturn {
   unlock: () => void;
 }
 
+/**
+ * Requests and manages the Pointer Lock API on the referenced element, returning lock/unlock controls.
+ *
+ * @param ref - RefObject attached to the element to lock pointer to.
+ * @returns Object with isLocked boolean, lock() async function, unlock() function.
+ */
 export function usePointerLock<T extends HTMLElement>(
   ref: RefObject<T>
 ): UsePointerLockReturn {

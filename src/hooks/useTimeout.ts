@@ -1,5 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
 
+/**
+ * Fires callback once after delay ms; returns reset() to restart and clear() to cancel.
+ *
+ * @param callback - Called after delay ms.
+ * @param delay - Delay in ms before callback fires.
+ * @returns Object with reset() and clear() functions.
+ */
 export function useTimeout(
   callback: () => void,
   delay: number

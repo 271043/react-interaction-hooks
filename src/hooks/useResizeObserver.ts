@@ -5,6 +5,12 @@ interface Size {
   height: number;
 }
 
+/**
+ * Returns {width, height} of the referenced element using ResizeObserver, updated on resize.
+ *
+ * @param ref - RefObject attached to the observed element.
+ * @returns Object with width and height (both 0 initially).
+ */
 export function useResizeObserver<T extends HTMLElement>(ref: RefObject<T>): Size {
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
 

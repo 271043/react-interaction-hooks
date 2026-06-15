@@ -11,6 +11,13 @@ interface IntersectionState {
   ratio: number;
 }
 
+/**
+ * Returns {isIntersecting, ratio} from an IntersectionObserver watching the referenced element.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @param options - Optional threshold, rootMargin, root.
+ * @returns Object with isIntersecting boolean and ratio number.
+ */
 export function useIntersectionObserver<T extends HTMLElement>(
   ref: RefObject<T>,
   options: UseIntersectionObserverOptions = {}

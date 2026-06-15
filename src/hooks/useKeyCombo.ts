@@ -23,6 +23,14 @@ function parseCombo(combo: string): { modifiers: Set<ModifierKey>; key: string }
   return { modifiers, key };
 }
 
+/**
+ * Calls callback when a specific key combination (e.g. "ctrl+k") is pressed on the target.
+ *
+ * @param combo - Key combo string like "ctrl+k", "shift+escape", or just "k".
+ * @param callback - Called with the KeyboardEvent when the combo matches.
+ * @param options - Optional enabled boolean and target element (default document).
+ * @returns void
+ */
 export function useKeyCombo(
   combo: string,
   callback: (event: KeyboardEvent) => void,

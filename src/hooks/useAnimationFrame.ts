@@ -1,5 +1,11 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Runs callback on every animation frame, passing the elapsed delta time in ms since last frame.
+ *
+ * @param callback - Called with deltaTime (ms) on each animation frame.
+ * @returns void
+ */
 export function useAnimationFrame(callback: (deltaTime: number) => void): void {
   const savedCallback = useRef(callback);
   const rafRef = useRef<number>(0);

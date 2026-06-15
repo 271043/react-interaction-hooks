@@ -7,8 +7,13 @@ interface UseNotificationReturn {
   notify: (title: string, options?: NotificationOptions) => Notification | null;
 }
 
+/**
+ * Returns {permission, supported, requestPermission, notify} for creating browser Notifications.
+ *
+ * @returns Object with permission state, supported boolean, requestPermission() async function, notify() function.
+ */
 export function useNotification(): UseNotificationReturn {
-  const supported = "Notification" in window;
+  const supported = typeof Notification !== "undefined" && !!Notification;
   const [permission, setPermission] = useState<NotificationPermission>(
     supported ? Notification.permission : "denied"
   );

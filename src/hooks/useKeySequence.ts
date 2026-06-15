@@ -1,5 +1,12 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Calls callback when the exact sequence of keys is pressed in order.
+ *
+ * @param sequence - Array of key names to match in order (matches KeyboardEvent.key).
+ * @param callback - Called when the full sequence is typed.
+ * @returns void
+ */
 export function useKeySequence(sequence: string[], callback: () => void): void {
   const savedCallback = useRef(callback);
   const progress = useRef<number>(0);

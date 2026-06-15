@@ -6,6 +6,11 @@ interface DeviceOrientationState {
   gamma: number | null;
 }
 
+/**
+ * Returns {alpha, beta, gamma} from the DeviceOrientation API, updating on each orientation event.
+ *
+ * @returns Object with alpha, beta, gamma (all null initially).
+ */
 export function useDeviceOrientation(): DeviceOrientationState {
   const [orientation, setOrientation] = useState<DeviceOrientationState>({
     alpha: null,

@@ -1,5 +1,11 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Calls callback when the mouse pointer exits the browser viewport (relatedTarget === null).
+ *
+ * @param callback - Called when the pointer leaves the browser window.
+ * @returns void
+ */
 export function useMouseLeaveWindow(callback: () => void): void {
   const callbackRef = useRef(callback);
   callbackRef.current = callback;

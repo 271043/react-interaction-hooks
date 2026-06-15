@@ -1,5 +1,12 @@
 import { useEffect, useRef, RefObject } from "react";
 
+/**
+ * Calls callback and prevents the default browser context menu on right-click of the referenced element.
+ *
+ * @param ref - RefObject attached to the target element.
+ * @param callback - Called with the MouseEvent on contextmenu event.
+ * @returns void
+ */
 export function useContextMenu<T extends HTMLElement>(
   ref: RefObject<T>,
   callback: (event: MouseEvent) => void

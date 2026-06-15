@@ -5,6 +5,11 @@ interface UseGamepadReturn {
   connected: boolean;
 }
 
+/**
+ * Returns {gamepads, connected} from the Gamepad API, updating on gamepadconnected/gamepaddisconnected events.
+ *
+ * @returns Object with gamepads array and connected boolean.
+ */
 export function useGamepad(): UseGamepadReturn {
   const [gamepads, setGamepads] = useState<Gamepad[]>([]);
 
