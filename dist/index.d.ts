@@ -9,7 +9,7 @@ type Handler = (event: MouseEvent | TouchEvent) => void;
  * @param enabled - When false, disables the listener. Defaults to true.
  * @returns void
  */
-declare function useOutsideClick<T extends HTMLElement>(ref: RefObject<T>, handler: Handler, enabled?: boolean): void;
+declare function useOutsideClick<T extends HTMLElement>(ref: RefObject<T | null>, handler: Handler, enabled?: boolean): void;
 
 /**
  * Prevents body scrolling when locked is true; restores scroll position and styles on unlock.
@@ -30,7 +30,7 @@ interface UseHoverOptions {
  * @param options - Optional enterDelay and leaveDelay in ms.
  * @returns boolean — true when hovered.
  */
-declare function useHover<T extends HTMLElement>(ref: RefObject<T>, options?: UseHoverOptions): boolean;
+declare function useHover<T extends HTMLElement>(ref: RefObject<T | null>, options?: UseHoverOptions): boolean;
 
 interface UseKeyComboOptions {
     enabled?: boolean;
@@ -59,7 +59,7 @@ interface UseLongPressOptions {
  * @param options - Optional threshold ms (default 500), onStart, onCancel callbacks.
  * @returns void
  */
-declare function useLongPress<T extends HTMLElement>(ref: RefObject<T>, callback: () => void, options?: UseLongPressOptions): void;
+declare function useLongPress<T extends HTMLElement>(ref: RefObject<T | null>, callback: () => void, options?: UseLongPressOptions): void;
 
 interface DragState {
     isDragging: boolean;
@@ -78,7 +78,7 @@ interface DragState {
  * @param ref - RefObject attached to the draggable element.
  * @returns Object with isDragging boolean, delta {x,y} from drag start, position {x,y} current pointer.
  */
-declare function useDrag<T extends HTMLElement>(ref: RefObject<T>): DragState;
+declare function useDrag<T extends HTMLElement>(ref: RefObject<T | null>): DragState;
 
 type SwipeDirection = "left" | "right" | "up" | "down";
 interface UseSwipeOptions {
@@ -92,7 +92,7 @@ interface UseSwipeOptions {
  * @param options - onSwipe callback (required), optional threshold in px (default 50).
  * @returns void
  */
-declare function useSwipe<T extends HTMLElement>(ref: RefObject<T>, options: UseSwipeOptions): void;
+declare function useSwipe<T extends HTMLElement>(ref: RefObject<T | null>, options: UseSwipeOptions): void;
 
 interface UseDoubleTapOptions {
     threshold?: number;
@@ -105,7 +105,7 @@ interface UseDoubleTapOptions {
  * @param options - Optional threshold in ms (default 300).
  * @returns void
  */
-declare function useDoubleTap<T extends HTMLElement>(ref: RefObject<T>, callback: (event: TouchEvent) => void, options?: UseDoubleTapOptions): void;
+declare function useDoubleTap<T extends HTMLElement>(ref: RefObject<T | null>, callback: (event: TouchEvent) => void, options?: UseDoubleTapOptions): void;
 
 interface PinchState {
     scale: number;
@@ -125,7 +125,7 @@ interface UsePinchOptions {
  * @param options - onPinch callback with scale and origin, optional onPinchEnd.
  * @returns void
  */
-declare function usePinch<T extends HTMLElement>(ref: RefObject<T>, options: UsePinchOptions): void;
+declare function usePinch<T extends HTMLElement>(ref: RefObject<T | null>, options: UsePinchOptions): void;
 
 interface PointerPosition {
     x: number;
@@ -155,7 +155,7 @@ declare function useKeyPress(targetKey: string): boolean;
  * @param enabled - When false, disables the trap. Defaults to true.
  * @returns void
  */
-declare function useFocusTrap<T extends HTMLElement>(ref: RefObject<T>, enabled?: boolean): void;
+declare function useFocusTrap<T extends HTMLElement>(ref: RefObject<T | null>, enabled?: boolean): void;
 
 interface UseArrowNavigationOptions {
     selector?: string;
@@ -169,7 +169,7 @@ interface UseArrowNavigationOptions {
  * @param options - Optional selector string, orientation ("vertical"|"horizontal"|"both"), loop boolean.
  * @returns void
  */
-declare function useArrowNavigation<T extends HTMLElement>(ref: RefObject<T>, options?: UseArrowNavigationOptions): void;
+declare function useArrowNavigation<T extends HTMLElement>(ref: RefObject<T | null>, options?: UseArrowNavigationOptions): void;
 
 /**
  * Returns true when any descendant of the referenced element currently has focus.
@@ -177,7 +177,7 @@ declare function useArrowNavigation<T extends HTMLElement>(ref: RefObject<T>, op
  * @param ref - RefObject attached to the container element.
  * @returns boolean — true while focus is anywhere inside the element.
  */
-declare function useFocusWithin<T extends HTMLElement>(ref: RefObject<T>): boolean;
+declare function useFocusWithin<T extends HTMLElement>(ref: RefObject<T | null>): boolean;
 
 interface UseIntersectionObserverOptions {
     threshold?: number | number[];
@@ -195,7 +195,7 @@ interface IntersectionState {
  * @param options - Optional threshold, rootMargin, root.
  * @returns Object with isIntersecting boolean and ratio number.
  */
-declare function useIntersectionObserver<T extends HTMLElement>(ref: RefObject<T>, options?: UseIntersectionObserverOptions): IntersectionState;
+declare function useIntersectionObserver<T extends HTMLElement>(ref: RefObject<T | null>, options?: UseIntersectionObserverOptions): IntersectionState;
 
 /**
  * Returns true when no user activity (mouse, keyboard, scroll, touch) has occurred for timeout ms.
@@ -250,7 +250,7 @@ declare function useScrollDirection(): ScrollDirection;
  * @param ref - Optional RefObject for an element; omit to use window scroll progress.
  * @returns number between 0 (top) and 1 (bottom).
  */
-declare function useScrollProgress<T extends HTMLElement>(ref?: RefObject<T>): number;
+declare function useScrollProgress<T extends HTMLElement>(ref?: RefObject<T | null>): number;
 
 interface Size {
     width: number;
@@ -262,7 +262,7 @@ interface Size {
  * @param ref - RefObject attached to the observed element.
  * @returns Object with width and height (both 0 initially).
  */
-declare function useResizeObserver<T extends HTMLElement>(ref: RefObject<T>): Size;
+declare function useResizeObserver<T extends HTMLElement>(ref: RefObject<T | null>): Size;
 
 interface WindowSize {
     width: number;
@@ -290,7 +290,7 @@ interface DropZoneState {
  * @param options - onDrop callback (required), optional onDragOver and onDragLeave.
  * @returns Object with isOver boolean.
  */
-declare function useDropZone<T extends HTMLElement>(ref: RefObject<T>, options: UseDropZoneOptions): DropZoneState;
+declare function useDropZone<T extends HTMLElement>(ref: RefObject<T | null>, options: UseDropZoneOptions): DropZoneState;
 
 /**
  * Calls callback and prevents the default browser context menu on right-click of the referenced element.
@@ -299,7 +299,7 @@ declare function useDropZone<T extends HTMLElement>(ref: RefObject<T>, options: 
  * @param callback - Called with the MouseEvent on contextmenu event.
  * @returns void
  */
-declare function useContextMenu<T extends HTMLElement>(ref: RefObject<T>, callback: (event: MouseEvent) => void): void;
+declare function useContextMenu<T extends HTMLElement>(ref: RefObject<T | null>, callback: (event: MouseEvent) => void): void;
 
 /**
  * Calls callback when the mouse pointer exits the browser viewport (relatedTarget === null).
@@ -461,7 +461,7 @@ declare function useCountdown(initialSeconds: number): UseCountdownReturn;
  * @param options - MutationObserverInit (default: {childList:true, subtree:true}).
  * @returns void
  */
-declare function useMutationObserver(ref: React.RefObject<HTMLElement>, callback: MutationCallback, options?: MutationObserverInit): void;
+declare function useMutationObserver(ref: React.RefObject<HTMLElement | null>, callback: MutationCallback, options?: MutationObserverInit): void;
 
 interface ElementSize {
     width: number;
@@ -473,7 +473,7 @@ interface ElementSize {
  * @param ref - RefObject attached to the target element.
  * @returns Object with width and height (both 0 initially).
  */
-declare function useElementSize<T extends HTMLElement>(ref: RefObject<T>): ElementSize;
+declare function useElementSize<T extends HTMLElement>(ref: RefObject<T | null>): ElementSize;
 
 interface ElementPosition {
     x: number;
@@ -491,7 +491,7 @@ interface ElementPosition {
  * @param ref - RefObject attached to the target element.
  * @returns Object with x, y, top, left, right, bottom, width, height (all 0 initially).
  */
-declare function useElementPosition<T extends HTMLElement>(ref: RefObject<T>): ElementPosition;
+declare function useElementPosition<T extends HTMLElement>(ref: RefObject<T | null>): ElementPosition;
 
 interface UseFullscreenReturn {
     isFullscreen: boolean;
@@ -505,7 +505,7 @@ interface UseFullscreenReturn {
  * @param ref - RefObject attached to the element to fullscreen.
  * @returns Object with isFullscreen boolean, enter(), exit(), toggle() async functions.
  */
-declare function useFullscreen<T extends HTMLElement>(ref: RefObject<T>): UseFullscreenReturn;
+declare function useFullscreen<T extends HTMLElement>(ref: RefObject<T | null>): UseFullscreenReturn;
 
 interface UseWakeLockReturn {
     supported: boolean;
@@ -539,7 +539,7 @@ interface UseDoubleClickOptions {
  * @param options - Optional threshold in ms (default 300).
  * @returns void
  */
-declare function useDoubleClick<T extends HTMLElement>(ref: RefObject<T>, callback: (event: MouseEvent) => void, options?: UseDoubleClickOptions): void;
+declare function useDoubleClick<T extends HTMLElement>(ref: RefObject<T | null>, callback: (event: MouseEvent) => void, options?: UseDoubleClickOptions): void;
 
 interface UsePointerLockReturn {
     isLocked: boolean;
@@ -552,7 +552,7 @@ interface UsePointerLockReturn {
  * @param ref - RefObject attached to the element to lock pointer to.
  * @returns Object with isLocked boolean, lock() async function, unlock() function.
  */
-declare function usePointerLock<T extends HTMLElement>(ref: RefObject<T>): UsePointerLockReturn;
+declare function usePointerLock<T extends HTMLElement>(ref: RefObject<T | null>): UsePointerLockReturn;
 
 /**
  * Calls callback when the exact sequence of keys is pressed in order.
@@ -570,7 +570,7 @@ declare function useKeySequence(sequence: string[], callback: () => void): void;
  * @param options - ScrollIntoViewOptions (default: smooth scroll to center).
  * @returns () => void — call to scroll element into view.
  */
-declare function useScrollIntoView<T extends HTMLElement>(ref: RefObject<T>, options?: ScrollIntoViewOptions): () => void;
+declare function useScrollIntoView<T extends HTMLElement>(ref: RefObject<T | null>, options?: ScrollIntoViewOptions): () => void;
 
 interface UseScrollSpyOptions {
     threshold?: number;
@@ -583,7 +583,7 @@ interface UseScrollSpyOptions {
  * @param options - Optional threshold and rootMargin.
  * @returns number — index of currently intersecting ref (0 initially).
  */
-declare function useScrollSpy(refs: RefObject<HTMLElement>[], options?: UseScrollSpyOptions): number;
+declare function useScrollSpy(refs: RefObject<HTMLElement | null>[], options?: UseScrollSpyOptions): number;
 
 interface UseInfiniteScrollOptions {
     threshold?: number;
@@ -597,7 +597,7 @@ interface UseInfiniteScrollOptions {
  * @param options - Optional threshold and rootMargin.
  * @returns Object with loading boolean.
  */
-declare function useInfiniteScroll(ref: RefObject<HTMLElement>, onLoadMore: () => Promise<void> | void, options?: UseInfiniteScrollOptions): {
+declare function useInfiniteScroll(ref: RefObject<HTMLElement | null>, onLoadMore: () => Promise<void> | void, options?: UseInfiniteScrollOptions): {
     loading: boolean;
 };
 
@@ -735,6 +735,6 @@ type BreakpointMap = Record<string, number>;
  * @param breakpoints - Record mapping breakpoint name to minimum width in px.
  * @returns Record<string, boolean> updated via ResizeObserver.
  */
-declare function useContainerQuery<T extends HTMLElement>(ref: RefObject<T>, breakpoints: BreakpointMap): Record<string, boolean>;
+declare function useContainerQuery<T extends HTMLElement>(ref: RefObject<T | null>, breakpoints: BreakpointMap): Record<string, boolean>;
 
 export { useAnimationFrame, useArrowNavigation, useBattery, useColorScheme, useContainerQuery, useContextMenu, useCopyToClipboard, useCountdown, useDebounce, useDeviceOrientation, useDoubleClick, useDoubleTap, useDrag, useDropZone, useElementPosition, useElementSize, useEyeDropper, useFocusReturn, useFocusTrap, useFocusWithin, useFullscreen, useGamepad, useGeolocation, useHover, useIdle, useInfiniteScroll, useIntersectionObserver, useInterval, useKeyCombo, useKeyPress, useKeySequence, useLongPress, useMediaQuery, useMouseLeaveWindow, useMutationObserver, useNetworkStatus, useNotification, useOutsideClick, usePageVisibility, usePaste, usePermission, usePinch, usePointerLock, usePointerPosition, useReducedMotion, useResizeObserver, useScrollDirection, useScrollIntoView, useScrollLock, useScrollPosition, useScrollProgress, useScrollSpy, useShare, useSpeechRecognition, useSpeechSynthesis, useSwipe, useTabFocus, useTextSelection, useThrottle, useTimeout, useVibrate, useWakeLock, useWindowSize };
