@@ -13,7 +13,7 @@ interface UseDoubleClickOptions {
  * @returns void
  */
 export function useDoubleClick<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   callback: (event: MouseEvent) => void,
   options: UseDoubleClickOptions = {}
 ): void {

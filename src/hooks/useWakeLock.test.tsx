@@ -20,14 +20,14 @@ describe("useWakeLock", () => {
   });
 
   it("returns supported false when wakeLock not in navigator", () => {
-    const original = (navigator as Record<string, unknown>).wakeLock;
-    delete (navigator as Record<string, unknown>).wakeLock;
+    const original = (navigator as unknown as Record<string, unknown>).wakeLock;
+    delete (navigator as unknown as Record<string, unknown>).wakeLock;
 
     render(<WakeLockDisplay />);
     expect(screen.getByTestId("supported").textContent).toBe("false");
 
     if (original !== undefined) {
-      (navigator as Record<string, unknown>).wakeLock = original;
+      (navigator as unknown as Record<string, unknown>).wakeLock = original;
     }
   });
 

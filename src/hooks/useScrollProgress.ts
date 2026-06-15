@@ -6,7 +6,7 @@ import { useEffect, useState, RefObject } from "react";
  * @param ref - Optional RefObject for an element; omit to use window scroll progress.
  * @returns number between 0 (top) and 1 (bottom).
  */
-export function useScrollProgress<T extends HTMLElement>(ref?: RefObject<T>): number {
+export function useScrollProgress<T extends HTMLElement>(ref?: RefObject<T | null>): number {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {

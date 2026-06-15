@@ -32,14 +32,14 @@ describe("useBattery", () => {
     }
 
     // Use a custom component that checks for absence of getBattery
-    const original = (navigator as Record<string, unknown>).getBattery;
-    delete (navigator as Record<string, unknown>).getBattery;
+    const original = (navigator as unknown as Record<string, unknown>).getBattery;
+    delete (navigator as unknown as Record<string, unknown>).getBattery;
 
     render(<BatteryDisplay />);
     expect(screen.getByTestId("supported").textContent).toBe("false");
 
     if (original !== undefined) {
-      (navigator as Record<string, unknown>).getBattery = original;
+      (navigator as unknown as Record<string, unknown>).getBattery = original;
     }
   });
 

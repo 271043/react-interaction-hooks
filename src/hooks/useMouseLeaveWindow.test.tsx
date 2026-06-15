@@ -8,10 +8,10 @@ function TestComponent({ callback }: { callback: () => void }) {
 }
 
 describe("useMouseLeaveWindow", () => {
-  let callback: ReturnType<typeof vi.fn>;
+  let callback: () => void;
 
   beforeEach(() => {
-    callback = vi.fn();
+    callback = vi.fn() as unknown as () => void;
   });
 
   it("calls callback on mouseleave with relatedTarget null (pointer exits viewport)", () => {

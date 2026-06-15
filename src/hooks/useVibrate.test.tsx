@@ -53,8 +53,8 @@ describe("useVibrate", () => {
   });
 
   it("does not throw when navigator.vibrate is missing", () => {
-    const original = (navigator as Record<string, unknown>).vibrate;
-    delete (navigator as Record<string, unknown>).vibrate;
+    const original = (navigator as unknown as Record<string, unknown>).vibrate;
+    delete (navigator as unknown as Record<string, unknown>).vibrate;
 
     render(<VibrateCapture />);
 
@@ -65,7 +65,7 @@ describe("useVibrate", () => {
     }).not.toThrow();
 
     if (original !== undefined) {
-      (navigator as Record<string, unknown>).vibrate = original;
+      (navigator as unknown as Record<string, unknown>).vibrate = original;
     }
   });
 });

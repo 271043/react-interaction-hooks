@@ -21,20 +21,20 @@ describe("useEyeDropper", () => {
 
   it("returns supported false when EyeDropper not in window", () => {
     // Ensure EyeDropper is not defined
-    const original = (window as Record<string, unknown>).EyeDropper;
-    delete (window as Record<string, unknown>).EyeDropper;
+    const original = (window as unknown as Record<string, unknown>).EyeDropper;
+    delete (window as unknown as Record<string, unknown>).EyeDropper;
 
     render(<EyeDropperDisplay />);
     expect(screen.getByTestId("supported").textContent).toBe("false");
 
     if (original !== undefined) {
-      (window as Record<string, unknown>).EyeDropper = original;
+      (window as unknown as Record<string, unknown>).EyeDropper = original;
     }
   });
 
   it("open() returns null when EyeDropper is unsupported", async () => {
-    const original = (window as Record<string, unknown>).EyeDropper;
-    delete (window as Record<string, unknown>).EyeDropper;
+    const original = (window as unknown as Record<string, unknown>).EyeDropper;
+    delete (window as unknown as Record<string, unknown>).EyeDropper;
 
     let result: string | null = undefined as unknown as string | null;
     function CaptureDisplay() {
@@ -61,7 +61,7 @@ describe("useEyeDropper", () => {
     expect(result).toBeNull();
 
     if (original !== undefined) {
-      (window as Record<string, unknown>).EyeDropper = original;
+      (window as unknown as Record<string, unknown>).EyeDropper = original;
     }
   });
 

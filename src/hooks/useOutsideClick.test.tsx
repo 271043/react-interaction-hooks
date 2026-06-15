@@ -23,10 +23,10 @@ function TestComponent({
 }
 
 describe("useOutsideClick", () => {
-  let handler: ReturnType<typeof vi.fn>;
+  let handler: () => void;
 
   beforeEach(() => {
-    handler = vi.fn();
+    handler = vi.fn() as unknown as () => void;
   });
 
   it("calls handler when clicking outside the ref element", () => {

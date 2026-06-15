@@ -19,7 +19,7 @@ interface IntersectionState {
  * @returns Object with isIntersecting boolean and ratio number.
  */
 export function useIntersectionObserver<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: UseIntersectionObserverOptions = {}
 ): IntersectionState {
   const { threshold = 0, rootMargin = "0px", root = null } = options;

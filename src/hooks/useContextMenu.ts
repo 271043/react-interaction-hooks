@@ -8,7 +8,7 @@ import { useEffect, useRef, RefObject } from "react";
  * @returns void
  */
 export function useContextMenu<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   callback: (event: MouseEvent) => void
 ): void {
   const callbackRef = useRef(callback);

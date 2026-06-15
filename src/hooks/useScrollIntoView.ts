@@ -8,7 +8,7 @@ import { useCallback, RefObject } from "react";
  * @returns () => void — call to scroll element into view.
  */
 export function useScrollIntoView<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: ScrollIntoViewOptions = { behavior: "smooth", block: "center" }
 ): () => void {
   return useCallback(() => {

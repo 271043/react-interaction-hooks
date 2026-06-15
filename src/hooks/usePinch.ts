@@ -26,7 +26,7 @@ function getMidpoint(t1: Touch, t2: Touch) {
  * @returns void
  */
 export function usePinch<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: UsePinchOptions
 ): void {
   const { onPinch, onPinchEnd } = options;

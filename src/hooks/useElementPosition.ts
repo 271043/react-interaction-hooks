@@ -22,7 +22,7 @@ const INITIAL: ElementPosition = {
  * @returns Object with x, y, top, left, right, bottom, width, height (all 0 initially).
  */
 export function useElementPosition<T extends HTMLElement>(
-  ref: RefObject<T>
+  ref: RefObject<T | null>
 ): ElementPosition {
   const [pos, setPos] = useState<ElementPosition>(INITIAL);
 

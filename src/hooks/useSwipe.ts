@@ -15,7 +15,7 @@ interface UseSwipeOptions {
  * @returns void
  */
 export function useSwipe<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: UseSwipeOptions
 ): void {
   const { threshold = 50, onSwipe } = options;

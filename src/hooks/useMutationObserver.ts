@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
  * @returns void
  */
 export function useMutationObserver(
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLElement | null>,
   callback: MutationCallback,
   options: MutationObserverInit = { childList: true, subtree: true }
 ): void {

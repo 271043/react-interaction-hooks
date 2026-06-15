@@ -13,7 +13,7 @@ interface UseHoverOptions {
  * @returns boolean — true when hovered.
  */
 export function useHover<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: UseHoverOptions = {}
 ): boolean {
   const { enterDelay = 0, leaveDelay = 0 } = options;

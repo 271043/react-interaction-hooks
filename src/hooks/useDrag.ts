@@ -12,7 +12,7 @@ interface DragState {
  * @param ref - RefObject attached to the draggable element.
  * @returns Object with isDragging boolean, delta {x,y} from drag start, position {x,y} current pointer.
  */
-export function useDrag<T extends HTMLElement>(ref: RefObject<T>): DragState {
+export function useDrag<T extends HTMLElement>(ref: RefObject<T | null>): DragState {
   const [state, setState] = useState<DragState>({
     isDragging: false,
     delta: { x: 0, y: 0 },

@@ -10,10 +10,10 @@ function TestComponent({ callback }: { callback: (event: MouseEvent) => void }) 
 }
 
 describe("useContextMenu", () => {
-  let callback: ReturnType<typeof vi.fn>;
+  let callback: (event: MouseEvent) => void;
 
   beforeEach(() => {
-    callback = vi.fn();
+    callback = vi.fn() as unknown as (event: MouseEvent) => void;
   });
 
   it("calls callback on right-click (contextmenu event)", () => {

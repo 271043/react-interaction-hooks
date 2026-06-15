@@ -11,7 +11,7 @@ interface Size {
  * @param ref - RefObject attached to the observed element.
  * @returns Object with width and height (both 0 initially).
  */
-export function useResizeObserver<T extends HTMLElement>(ref: RefObject<T>): Size {
+export function useResizeObserver<T extends HTMLElement>(ref: RefObject<T | null>): Size {
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
 
   useEffect(() => {

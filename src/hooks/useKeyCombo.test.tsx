@@ -17,10 +17,10 @@ function TestComponent({
 }
 
 describe("useKeyCombo", () => {
-  let callback: ReturnType<typeof vi.fn>;
+  let callback: (e: KeyboardEvent) => void;
 
   beforeEach(() => {
-    callback = vi.fn();
+    callback = vi.fn() as unknown as (e: KeyboardEvent) => void;
   });
 
   it("calls callback when matching key is pressed", () => {

@@ -16,10 +16,10 @@ function TestComponent({
 }
 
 describe("useDoubleClick", () => {
-  let callback: ReturnType<typeof vi.fn>;
+  let callback: (event: MouseEvent) => void;
 
   beforeEach(() => {
-    callback = vi.fn();
+    callback = vi.fn() as unknown as (event: MouseEvent) => void;
     vi.useFakeTimers();
   });
 

@@ -14,7 +14,7 @@ interface UseArrowNavigationOptions {
  * @returns void
  */
 export function useArrowNavigation<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: UseArrowNavigationOptions = {}
 ): void {
   const {

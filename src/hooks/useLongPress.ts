@@ -15,7 +15,7 @@ interface UseLongPressOptions {
  * @returns void
  */
 export function useLongPress<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   callback: () => void,
   options: UseLongPressOptions = {}
 ): void {

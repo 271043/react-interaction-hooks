@@ -18,7 +18,7 @@ interface DropZoneState {
  * @returns Object with isOver boolean.
  */
 export function useDropZone<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   options: UseDropZoneOptions
 ): DropZoneState {
   const [isOver, setIsOver] = useState(false);

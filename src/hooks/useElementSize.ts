@@ -12,7 +12,7 @@ interface ElementSize {
  * @returns Object with width and height (both 0 initially).
  */
 export function useElementSize<T extends HTMLElement>(
-  ref: RefObject<T>
+  ref: RefObject<T | null>
 ): ElementSize {
   const [size, setSize] = useState<ElementSize>({ width: 0, height: 0 });
 

@@ -8,7 +8,7 @@ function TestComponent({
   mockScrollIntoView,
 }: {
   options?: ScrollIntoViewOptions;
-  mockScrollIntoView: ReturnType<typeof vi.fn>;
+  mockScrollIntoView: (arg?: boolean | ScrollIntoViewOptions) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const scrollIntoView = options ? useScrollIntoView(ref, options) : useScrollIntoView(ref);
@@ -43,7 +43,7 @@ function NullRefComponent() {
 
 describe("useScrollIntoView", () => {
   it("calls scrollIntoView on ref.current when the returned function is invoked", () => {
-    const mockScrollIntoView = vi.fn();
+    const mockScrollIntoView = vi.fn() as unknown as (arg?: boolean | ScrollIntoViewOptions) => void;
     render(<TestComponent mockScrollIntoView={mockScrollIntoView} />);
 
     fireEvent.click(screen.getByTestId("trigger"));
@@ -52,7 +52,7 @@ describe("useScrollIntoView", () => {
   });
 
   it("passes options to scrollIntoView", () => {
-    const mockScrollIntoView = vi.fn();
+    const mockScrollIntoView = vi.fn() as unknown as (arg?: boolean | ScrollIntoViewOptions) => void;
     const options: ScrollIntoViewOptions = { behavior: "instant", block: "start" };
     render(<TestComponent options={options} mockScrollIntoView={mockScrollIntoView} />);
 

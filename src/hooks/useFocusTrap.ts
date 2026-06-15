@@ -17,7 +17,7 @@ const FOCUSABLE_SELECTOR = [
  * @returns void
  */
 export function useFocusTrap<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   enabled = true
 ): void {
   useEffect(() => {

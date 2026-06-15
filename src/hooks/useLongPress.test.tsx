@@ -20,11 +20,11 @@ function TestComponent({
 }
 
 describe("useLongPress", () => {
-  let callback: ReturnType<typeof vi.fn>;
+  let callback: () => void;
 
   beforeEach(() => {
     vi.useFakeTimers();
-    callback = vi.fn();
+    callback = vi.fn() as unknown as () => void;
   });
 
   afterEach(() => {

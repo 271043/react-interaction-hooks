@@ -14,7 +14,7 @@ interface UseFullscreenReturn {
  * @returns Object with isFullscreen boolean, enter(), exit(), toggle() async functions.
  */
 export function useFullscreen<T extends HTMLElement>(
-  ref: RefObject<T>
+  ref: RefObject<T | null>
 ): UseFullscreenReturn {
   const [isFullscreen, setIsFullscreen] = useState(false);
 

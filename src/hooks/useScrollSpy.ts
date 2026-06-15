@@ -13,7 +13,7 @@ interface UseScrollSpyOptions {
  * @returns number — index of currently intersecting ref (0 initially).
  */
 export function useScrollSpy(
-  refs: RefObject<HTMLElement>[],
+  refs: RefObject<HTMLElement | null>[],
   options: UseScrollSpyOptions = {}
 ): number {
   const { threshold = 0.5, rootMargin = "0px" } = options;

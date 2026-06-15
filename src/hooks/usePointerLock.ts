@@ -13,7 +13,7 @@ interface UsePointerLockReturn {
  * @returns Object with isLocked boolean, lock() async function, unlock() function.
  */
 export function usePointerLock<T extends HTMLElement>(
-  ref: RefObject<T>
+  ref: RefObject<T | null>
 ): UsePointerLockReturn {
   const [isLocked, setIsLocked] = useState(false);
 

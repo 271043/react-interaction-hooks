@@ -13,7 +13,7 @@ interface UseDoubleTapOptions {
  * @returns void
  */
 export function useDoubleTap<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   callback: (event: TouchEvent) => void,
   options: UseDoubleTapOptions = {}
 ): void {

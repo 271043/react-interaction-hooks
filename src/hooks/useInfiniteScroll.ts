@@ -14,7 +14,7 @@ interface UseInfiniteScrollOptions {
  * @returns Object with loading boolean.
  */
 export function useInfiniteScroll(
-  ref: RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   onLoadMore: () => Promise<void> | void,
   options: UseInfiniteScrollOptions = {}
 ): { loading: boolean } {

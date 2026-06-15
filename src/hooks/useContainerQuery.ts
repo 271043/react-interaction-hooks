@@ -10,7 +10,7 @@ type BreakpointMap = Record<string, number>;
  * @returns Record<string, boolean> updated via ResizeObserver.
  */
 export function useContainerQuery<T extends HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null>,
   breakpoints: BreakpointMap
 ): Record<string, boolean> {
   const [matches, setMatches] = useState<Record<string, boolean>>(() =>

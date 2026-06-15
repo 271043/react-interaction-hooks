@@ -32,14 +32,14 @@ function makeDragEvent(type: string, files?: File[]) {
 }
 
 describe("useDropZone", () => {
-  let onDrop: ReturnType<typeof vi.fn>;
-  let onDragOver: ReturnType<typeof vi.fn>;
-  let onDragLeave: ReturnType<typeof vi.fn>;
+  let onDrop: (files: FileList) => void;
+  let onDragOver: () => void;
+  let onDragLeave: () => void;
 
   beforeEach(() => {
-    onDrop = vi.fn();
-    onDragOver = vi.fn();
-    onDragLeave = vi.fn();
+    onDrop = vi.fn() as unknown as (files: FileList) => void;
+    onDragOver = vi.fn() as unknown as () => void;
+    onDragLeave = vi.fn() as unknown as () => void;
   });
 
   it("isOver becomes true on dragover", () => {
