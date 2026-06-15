@@ -1133,7 +1133,7 @@ function useInfiniteScroll(ref, onLoadMore, options = {}) {
   return { loading };
 }
 function useShare() {
-  const supported = "share" in navigator;
+  const supported = typeof navigator.share === "function";
   const share = react.useCallback(async (data) => {
     if (!supported) return;
     await navigator.share(data);
@@ -1143,7 +1143,7 @@ function useShare() {
 function usePermission(name) {
   const [state, setState] = react.useState(null);
   react.useEffect(() => {
-    if (!("permissions" in navigator)) return;
+    if (!navigator.permissions) return;
     let permissionStatus;
     navigator.permissions.query({ name }).then((status) => {
       permissionStatus = status;
@@ -1158,7 +1158,7 @@ function usePermission(name) {
   return state;
 }
 function useNotification() {
-  const supported = "Notification" in window;
+  const supported = typeof Notification !== "undefined" && !!Notification;
   const [permission, setPermission] = react.useState(
     supported ? Notification.permission : "denied"
   );
@@ -1259,18 +1259,20 @@ function useSpeechRecognition(lang = "en-US") {
   return { supported, listening, transcript, start, stop, reset };
 }
 function useSpeechSynthesis() {
-  const supported = "speechSynthesis" in window;
+  const supported = typeof window.speechSynthesis !== "undefined" && !!window.speechSynthesis;
   const [speaking, setSpeaking] = react.useState(false);
   const [voices, setVoices] = react.useState([]);
   react.useEffect(() => {
     if (!supported) return;
-    const load = () => setVoices(window.speechSynthesis.getVoices());
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const load = () => setVoices(synth.getVoices());
     load();
-    window.speechSynthesis.addEventListener("voiceschanged", load);
-    return () => window.speechSynthesis.removeEventListener("voiceschanged", load);
+    synth.addEventListener("voiceschanged", load);
+    return () => synth.removeEventListener("voiceschanged", load);
   }, [supported]);
   const speak = react.useCallback((text, options = {}) => {
-    if (!supported) return;
+    if (!supported || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     if (options.voice) utterance.voice = options.voice;
@@ -1284,6 +1286,7 @@ function useSpeechSynthesis() {
     window.speechSynthesis.speak(utterance);
   }, [supported]);
   const cancel = react.useCallback(() => {
+    if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     setSpeaking(false);
   }, []);
