@@ -20,7 +20,7 @@ const HOOKS: Record<string, {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useOutsideClick } from 'hookset'
+import { useOutsideClick } from '@sharpbits/react-interaction-hooks'
 
 function Dropdown() {
   const ref = useRef(null)
@@ -38,7 +38,7 @@ function Dropdown() {
       { name: "locked", type: "boolean", description: "true = ล็อก scroll, false = ปล่อยตามปกติ" },
     ],
     returns: "void",
-    example: `import { useScrollLock } from 'hookset'
+    example: `import { useScrollLock } from '@sharpbits/react-interaction-hooks'
 
 function Modal({ open }) {
   useScrollLock(open)
@@ -55,7 +55,7 @@ function Modal({ open }) {
     ],
     returns: "boolean — isHovered",
     example: `import { useRef } from 'react'
-import { useHover } from 'hookset'
+import { useHover } from '@sharpbits/react-interaction-hooks'
 
 function Tooltip() {
   const ref = useRef(null)
@@ -79,7 +79,7 @@ function Tooltip() {
       { name: "options.target", type: "HTMLElement | Document", default: "document", description: "Element ที่ attach listener" },
     ],
     returns: "void",
-    example: `import { useKeyCombo } from 'hookset'
+    example: `import { useKeyCombo } from '@sharpbits/react-interaction-hooks'
 
 function SearchBar() {
   useKeyCombo('ctrl+k', (e) => {
@@ -102,7 +102,7 @@ function SearchBar() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useLongPress } from 'hookset'
+import { useLongPress } from '@sharpbits/react-interaction-hooks'
 
 function DeleteButton() {
   const ref = useRef(null)
@@ -126,7 +126,7 @@ function DeleteButton() {
     ],
     returns: "{ isDragging: boolean; delta: { x: number; y: number }; position: { x: number; y: number } }",
     example: `import { useRef } from 'react'
-import { useDrag } from 'hookset'
+import { useDrag } from '@sharpbits/react-interaction-hooks'
 
 function DraggableCard() {
   const ref = useRef(null)
@@ -149,7 +149,7 @@ function DraggableCard() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useSwipe } from 'hookset'
+import { useSwipe } from '@sharpbits/react-interaction-hooks'
 
 function Carousel() {
   const ref = useRef(null)
@@ -170,7 +170,7 @@ function Carousel() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useDoubleTap } from 'hookset'
+import { useDoubleTap } from '@sharpbits/react-interaction-hooks'
 
 function LikePhoto() {
   const ref = useRef(null)
@@ -188,7 +188,7 @@ function LikePhoto() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { usePinch } from 'hookset'
+import { usePinch } from '@sharpbits/react-interaction-hooks'
 
 function ZoomableImage() {
   const ref = useRef(null)
@@ -204,7 +204,7 @@ function ZoomableImage() {
     description: "ติดตาม position ของ mouse pointer ทั้ง page coordinates และ client coordinates แบบ real-time",
     params: [],
     returns: "{ x: number; y: number; clientX: number; clientY: number }",
-    example: `import { usePointerPosition } from 'hookset'
+    example: `import { usePointerPosition } from '@sharpbits/react-interaction-hooks'
 
 function CursorFollower() {
   const { x, y } = usePointerPosition()
@@ -225,7 +225,7 @@ function CursorFollower() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useDoubleClick } from 'hookset'
+import { useDoubleClick } from '@sharpbits/react-interaction-hooks'
 
 function EditableTitle() {
   const ref = useRef(null)
@@ -241,7 +241,7 @@ function EditableTitle() {
     ],
     returns: "{ isLocked: boolean; lock: () => void; unlock: () => void }",
     example: `import { useRef } from 'react'
-import { usePointerLock } from 'hookset'
+import { usePointerLock } from '@sharpbits/react-interaction-hooks'
 
 function GameCanvas() {
   const ref = useRef(null)
@@ -264,7 +264,7 @@ function GameCanvas() {
     ],
     returns: "{ isOver: boolean }",
     example: `import { useRef } from 'react'
-import { useDropZone } from 'hookset'
+import { useDropZone } from '@sharpbits/react-interaction-hooks'
 
 function FileUploader() {
   const ref = useRef(null)
@@ -287,7 +287,7 @@ function FileUploader() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useContextMenu } from 'hookset'
+import { useContextMenu } from '@sharpbits/react-interaction-hooks'
 
 function FileItem() {
   const ref = useRef(null)
@@ -305,7 +305,7 @@ function FileItem() {
       { name: "callback", type: "(event: MouseEvent) => void", description: "Callback เมื่อ mouse ออกจาก window" },
     ],
     returns: "void",
-    example: `import { useMouseLeaveWindow } from 'hookset'
+    example: `import { useMouseLeaveWindow } from '@sharpbits/react-interaction-hooks'
 
 function ExitIntentModal() {
   const [show, setShow] = useState(false)
@@ -322,7 +322,7 @@ function ExitIntentModal() {
       { name: "targetKey", type: "string", description: "Key name เช่น 'ArrowUp', 'Enter', 'a'" },
     ],
     returns: "boolean — true ขณะที่กดปุ่มค้าง",
-    example: `import { useKeyPress } from 'hookset'
+    example: `import { useKeyPress } from '@sharpbits/react-interaction-hooks'
 
 function Player() {
   const isUp = useKeyPress('ArrowUp')
@@ -344,7 +344,7 @@ function Player() {
       { name: "callback", type: "() => void", description: "Callback เมื่อพิมพ์ครบ sequence" },
     ],
     returns: "void",
-    example: `import { useKeySequence } from 'hookset'
+    example: `import { useKeySequence } from '@sharpbits/react-interaction-hooks'
 
 function KonamiCode() {
   useKeySequence(
@@ -365,7 +365,7 @@ function KonamiCode() {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useFocusTrap } from 'hookset'
+import { useFocusTrap } from '@sharpbits/react-interaction-hooks'
 
 function Modal({ open }) {
   const ref = useRef(null)
@@ -389,7 +389,7 @@ function Modal({ open }) {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useArrowNavigation } from 'hookset'
+import { useArrowNavigation } from '@sharpbits/react-interaction-hooks'
 
 function Menu({ items }) {
   const ref = useRef(null)
@@ -409,7 +409,7 @@ function Menu({ items }) {
     ],
     returns: "boolean — true เมื่อมี focus อยู่ภายใน",
     example: `import { useRef } from 'react'
-import { useFocusWithin } from 'hookset'
+import { useFocusWithin } from '@sharpbits/react-interaction-hooks'
 
 function FormGroup({ label, children }) {
   const ref = useRef(null)
@@ -427,7 +427,7 @@ function FormGroup({ label, children }) {
     description: "บันทึก element ที่มี focus อยู่ก่อน mount และคืน focus ให้เมื่อ component unmount",
     params: [],
     returns: "void",
-    example: `import { useFocusReturn } from 'hookset'
+    example: `import { useFocusReturn } from '@sharpbits/react-interaction-hooks'
 
 function Dialog({ onClose }) {
   useFocusReturn()
@@ -444,7 +444,7 @@ function Dialog({ onClose }) {
     description: "คืน true เมื่อผู้ใช้กำลังใช้ keyboard (Tab key) นำทาง ใช้แสดง focus ring สำหรับ accessibility",
     params: [],
     returns: "boolean — true เมื่อใช้ keyboard navigation",
-    example: `import { useTabFocus } from 'hookset'
+    example: `import { useTabFocus } from '@sharpbits/react-interaction-hooks'
 
 function App() {
   const isTabbing = useTabFocus()
@@ -460,7 +460,7 @@ function App() {
     description: "คืน true เมื่อ OS ตั้งค่า prefers-reduced-motion เปิดอยู่ ใช้ลด animation สำหรับผู้ใช้ที่ต้องการ",
     params: [],
     returns: "boolean — true เมื่อ prefers-reduced-motion: reduce",
-    example: `import { useReducedMotion } from 'hookset'
+    example: `import { useReducedMotion } from '@sharpbits/react-interaction-hooks'
 
 function AnimatedBanner() {
   const reduced = useReducedMotion()
@@ -478,7 +478,7 @@ function AnimatedBanner() {
     description: "ติดตาม scroll position ของ window แบบ real-time คืนค่า x และ y",
     params: [],
     returns: "{ x: number; y: number }",
-    example: `import { useScrollPosition } from 'hookset'
+    example: `import { useScrollPosition } from '@sharpbits/react-interaction-hooks'
 
 function BackToTop() {
   const { y } = useScrollPosition()
@@ -492,7 +492,7 @@ function BackToTop() {
     description: "ติดตามทิศทาง scroll ล่าสุดของ window คืนค่า 'up', 'down' หรือ null",
     params: [],
     returns: '"up" | "down" | null',
-    example: `import { useScrollDirection } from 'hookset'
+    example: `import { useScrollDirection } from '@sharpbits/react-interaction-hooks'
 
 function Header() {
   const dir = useScrollDirection()
@@ -510,7 +510,7 @@ function Header() {
       { name: "ref", type: "RefObject<HTMLElement>", description: "Element ที่ต้องการ track (ถ้าไม่ระบุ ใช้ window)" },
     ],
     returns: "number — 0 (top) ถึง 1 (bottom)",
-    example: `import { useScrollProgress } from 'hookset'
+    example: `import { useScrollProgress } from '@sharpbits/react-interaction-hooks'
 
 function Article() {
   const progress = useScrollProgress()
@@ -531,7 +531,7 @@ function Article() {
     ],
     returns: "() => void — function สำหรับ trigger scroll",
     example: `import { useRef } from 'react'
-import { useScrollIntoView } from 'hookset'
+import { useScrollIntoView } from '@sharpbits/react-interaction-hooks'
 
 function Section({ id, children }) {
   const ref = useRef(null)
@@ -554,7 +554,7 @@ function Section({ id, children }) {
     ],
     returns: "number — index ของ section ที่ active",
     example: `import { useRef } from 'react'
-import { useScrollSpy } from 'hookset'
+import { useScrollSpy } from '@sharpbits/react-interaction-hooks'
 
 function TableOfContents({ sections }) {
   const refs = sections.map(() => useRef(null))
@@ -579,7 +579,7 @@ function TableOfContents({ sections }) {
     ],
     returns: "{ loading: boolean }",
     example: `import { useRef } from 'react'
-import { useInfiniteScroll } from 'hookset'
+import { useInfiniteScroll } from '@sharpbits/react-interaction-hooks'
 
 function Feed() {
   const sentinelRef = useRef(null)
@@ -602,7 +602,7 @@ function Feed() {
     ],
     returns: "{ width: number; height: number }",
     example: `import { useRef } from 'react'
-import { useResizeObserver } from 'hookset'
+import { useResizeObserver } from '@sharpbits/react-interaction-hooks'
 
 function ResponsiveChart() {
   const ref = useRef(null)
@@ -619,7 +619,7 @@ function ResponsiveChart() {
     description: "ติดตามขนาด window แบบ real-time คืน width และ height ที่อัปเดตเมื่อ resize",
     params: [],
     returns: "{ width: number; height: number }",
-    example: `import { useWindowSize } from 'hookset'
+    example: `import { useWindowSize } from '@sharpbits/react-interaction-hooks'
 
 function Layout() {
   const { width } = useWindowSize()
@@ -640,7 +640,7 @@ function Layout() {
     ],
     returns: "{ width: number; height: number }",
     example: `import { useRef } from 'react'
-import { useElementSize } from 'hookset'
+import { useElementSize } from '@sharpbits/react-interaction-hooks'
 
 function TextBox() {
   const ref = useRef(null)
@@ -660,7 +660,7 @@ function TextBox() {
     ],
     returns: "{ x: number; y: number; top: number; left: number; right: number; bottom: number; width: number; height: number }",
     example: `import { useRef } from 'react'
-import { useElementPosition } from 'hookset'
+import { useElementPosition } from '@sharpbits/react-interaction-hooks'
 
 function Tooltip({ anchor }) {
   const ref = useRef(null)
@@ -682,7 +682,7 @@ function Tooltip({ anchor }) {
     ],
     returns: "Record<string, boolean> — แต่ละ key true เมื่อ container กว้างกว่า breakpoint",
     example: `import { useRef } from 'react'
-import { useContainerQuery } from 'hookset'
+import { useContainerQuery } from '@sharpbits/react-interaction-hooks'
 
 function Card() {
   const ref = useRef(null)
@@ -705,7 +705,7 @@ function Card() {
     ],
     returns: "{ isIntersecting: boolean; ratio: number }",
     example: `import { useRef } from 'react'
-import { useIntersectionObserver } from 'hookset'
+import { useIntersectionObserver } from '@sharpbits/react-interaction-hooks'
 
 function LazyImage({ src }) {
   const ref = useRef(null)
@@ -723,7 +723,7 @@ function LazyImage({ src }) {
     ],
     returns: "void",
     example: `import { useRef } from 'react'
-import { useMutationObserver } from 'hookset'
+import { useMutationObserver } from '@sharpbits/react-interaction-hooks'
 
 function DOMWatcher() {
   const ref = useRef(null)
@@ -742,7 +742,7 @@ function DOMWatcher() {
       { name: "resetDelay", type: "number", default: "2000", description: "ms ก่อน copied กลับเป็น false" },
     ],
     returns: "{ copied: boolean; copy: (text: string) => void }",
-    example: `import { useCopyToClipboard } from 'hookset'
+    example: `import { useCopyToClipboard } from '@sharpbits/react-interaction-hooks'
 
 function CopyButton({ text }) {
   const { copied, copy } = useCopyToClipboard()
@@ -760,7 +760,7 @@ function CopyButton({ text }) {
       { name: "callback", type: "(data: string | FileList) => void", description: "Callback เมื่อ paste" },
     ],
     returns: "void",
-    example: `import { usePaste } from 'hookset'
+    example: `import { usePaste } from '@sharpbits/react-interaction-hooks'
 
 function PasteArea() {
   const [content, setContent] = useState('')
@@ -775,7 +775,7 @@ function PasteArea() {
     description: "ติดตาม text selection ปัจจุบันของผู้ใช้ คืน text ที่เลือกและ DOMRect ของ selection",
     params: [],
     returns: "{ text: string; rect: DOMRect | null }",
-    example: `import { useTextSelection } from 'hookset'
+    example: `import { useTextSelection } from '@sharpbits/react-interaction-hooks'
 
 function SelectionToolbar() {
   const { text, rect } = useTextSelection()
@@ -797,7 +797,7 @@ function SelectionToolbar() {
       { name: "delay", type: "number", description: "ระยะเวลา debounce (ms)" },
     ],
     returns: "T — ค่าที่ debounced แล้ว",
-    example: `import { useDebounce } from 'hookset'
+    example: `import { useDebounce } from '@sharpbits/react-interaction-hooks'
 
 function SearchInput() {
   const [query, setQuery] = useState('')
@@ -818,7 +818,7 @@ function SearchInput() {
       { name: "delay", type: "number", description: "ระยะห่างขั้นต่ำระหว่างการอัปเดต (ms)" },
     ],
     returns: "T — ค่าที่ throttled แล้ว",
-    example: `import { useThrottle } from 'hookset'
+    example: `import { useThrottle } from '@sharpbits/react-interaction-hooks'
 
 function MouseTracker() {
   const [pos, setPos] = useState({ x: 0, y: 0 })
@@ -839,7 +839,7 @@ function MouseTracker() {
       { name: "delay", type: "number | null", description: "ระยะเวลาระหว่าง call (ms) หรือ null เพื่อหยุด" },
     ],
     returns: "void",
-    example: `import { useInterval } from 'hookset'
+    example: `import { useInterval } from '@sharpbits/react-interaction-hooks'
 
 function Clock() {
   const [time, setTime] = useState(new Date())
@@ -855,7 +855,7 @@ function Clock() {
       { name: "delay", type: "number | null", description: "ระยะเวลา (ms) หรือ null เพื่อหยุด" },
     ],
     returns: "{ reset: () => void; clear: () => void }",
-    example: `import { useTimeout } from 'hookset'
+    example: `import { useTimeout } from '@sharpbits/react-interaction-hooks'
 
 function Toast({ message, onDismiss }) {
   const { clear } = useTimeout(onDismiss, 3000)
@@ -874,7 +874,7 @@ function Toast({ message, onDismiss }) {
       { name: "callback", type: "(deltaTime: number) => void", description: "Function ที่รันทุก frame พร้อม delta ms" },
     ],
     returns: "void",
-    example: `import { useAnimationFrame } from 'hookset'
+    example: `import { useAnimationFrame } from '@sharpbits/react-interaction-hooks'
 
 function Particle() {
   const [x, setX] = useState(0)
@@ -891,7 +891,7 @@ function Particle() {
       { name: "initialSeconds", type: "number", description: "จำนวนวินาทีเริ่มต้น" },
     ],
     returns: "{ count: number; running: boolean; start: () => void; stop: () => void; reset: () => void }",
-    example: `import { useCountdown } from 'hookset'
+    example: `import { useCountdown } from '@sharpbits/react-interaction-hooks'
 
 function Quiz() {
   const { count, running, start, stop, reset } = useCountdown(60)
@@ -912,7 +912,7 @@ function Quiz() {
       { name: "timeout", type: "number", description: "ระยะเวลาไม่มีการใช้งาน (ms) ก่อนนับว่า idle" },
     ],
     returns: "boolean — true เมื่อ idle",
-    example: `import { useIdle } from 'hookset'
+    example: `import { useIdle } from '@sharpbits/react-interaction-hooks'
 
 function AutoLogout() {
   const isIdle = useIdle(5 * 60 * 1000) // 5 minutes
@@ -933,7 +933,7 @@ function AutoLogout() {
       { name: "query", type: "string", description: "CSS media query string เช่น '(max-width: 768px)'" },
     ],
     returns: "boolean — true เมื่อ media query match",
-    example: `import { useMediaQuery } from 'hookset'
+    example: `import { useMediaQuery } from '@sharpbits/react-interaction-hooks'
 
 function ResponsiveNav() {
   const isMobile = useMediaQuery('(max-width: 768px)')
@@ -945,7 +945,7 @@ function ResponsiveNav() {
     description: "ติดตาม Page Visibility API คืน true เมื่อ tab กำลัง visible และ false เมื่อ hidden",
     params: [],
     returns: "boolean — true เมื่อ page visible",
-    example: `import { usePageVisibility } from 'hookset'
+    example: `import { usePageVisibility } from '@sharpbits/react-interaction-hooks'
 
 function VideoPlayer() {
   const isVisible = usePageVisibility()
@@ -962,7 +962,7 @@ function VideoPlayer() {
     description: "ตรวจสอบ system color scheme คืน 'dark' หรือ 'light' ตาม prefers-color-scheme media query",
     params: [],
     returns: '"dark" | "light"',
-    example: `import { useColorScheme } from 'hookset'
+    example: `import { useColorScheme } from '@sharpbits/react-interaction-hooks'
 
 function ThemeProvider({ children }) {
   const scheme = useColorScheme()
@@ -981,7 +981,7 @@ function ThemeProvider({ children }) {
     ],
     returns: "{ isFullscreen: boolean; enter: () => void; exit: () => void; toggle: () => void }",
     example: `import { useRef } from 'react'
-import { useFullscreen } from 'hookset'
+import { useFullscreen } from '@sharpbits/react-interaction-hooks'
 
 function VideoPlayer() {
   const ref = useRef(null)
@@ -999,7 +999,7 @@ function VideoPlayer() {
     description: "ใช้ Web Share API แชร์ content ผ่าน native share dialog คืน supported และ share function",
     params: [],
     returns: "{ supported: boolean; share: (data: ShareData) => Promise<void> }",
-    example: `import { useShare } from 'hookset'
+    example: `import { useShare } from '@sharpbits/react-interaction-hooks'
 
 function ShareButton({ title, url }) {
   const { supported, share } = useShare()
@@ -1018,7 +1018,7 @@ function ShareButton({ title, url }) {
       { name: "name", type: "PermissionName", description: "ชื่อ permission เช่น 'camera', 'notifications', 'geolocation'" },
     ],
     returns: 'PermissionState | null — "granted" | "denied" | "prompt" | null',
-    example: `import { usePermission } from 'hookset'
+    example: `import { usePermission } from '@sharpbits/react-interaction-hooks'
 
 function CameraButton() {
   const state = usePermission('camera')
@@ -1034,7 +1034,7 @@ function CameraButton() {
     description: "จัดการ Notifications API — ขอ permission และแสดง notification พร้อม state ของ permission",
     params: [],
     returns: "{ permission: NotificationPermission; supported: boolean; requestPermission: () => Promise<void>; notify: (title: string, options?: NotificationOptions) => void }",
-    example: `import { useNotification } from 'hookset'
+    example: `import { useNotification } from '@sharpbits/react-interaction-hooks'
 
 function AlertButton() {
   const { permission, requestPermission, notify } = useNotification()
@@ -1055,7 +1055,7 @@ function AlertButton() {
     description: "ติดตาม network connection status คืน online, type (wifi/cellular) และ effectiveType (4g/3g/2g)",
     params: [],
     returns: "{ online: boolean; type: string | null; effectiveType: string | null }",
-    example: `import { useNetworkStatus } from 'hookset'
+    example: `import { useNetworkStatus } from '@sharpbits/react-interaction-hooks'
 
 function NetworkBanner() {
   const { online, effectiveType } = useNetworkStatus()
@@ -1068,7 +1068,7 @@ function NetworkBanner() {
     description: "ติดตาม device orientation ผ่าน DeviceOrientationEvent คืน alpha, beta, gamma (degrees)",
     params: [],
     returns: "{ alpha: number | null; beta: number | null; gamma: number | null }",
-    example: `import { useDeviceOrientation } from 'hookset'
+    example: `import { useDeviceOrientation } from '@sharpbits/react-interaction-hooks'
 
 function Tilt3D() {
   const { beta, gamma } = useDeviceOrientation()
@@ -1088,7 +1088,7 @@ function Tilt3D() {
       { name: "options.maximumAge", type: "number", description: "อายุสูงสุดของ cached position (ms)" },
     ],
     returns: "{ loading: boolean; position: GeolocationPosition | null; error: GeolocationPositionError | null }",
-    example: `import { useGeolocation } from 'hookset'
+    example: `import { useGeolocation } from '@sharpbits/react-interaction-hooks'
 
 function MyLocation() {
   const { loading, position, error } = useGeolocation({ enableHighAccuracy: true })
@@ -1102,7 +1102,7 @@ function MyLocation() {
     description: "ติดตาม battery status ผ่าน Battery API คืน level, charging, chargingTime, dischargingTime",
     params: [],
     returns: "{ supported: boolean; loading: boolean; level: number; charging: boolean; chargingTime: number; dischargingTime: number }",
-    example: `import { useBattery } from 'hookset'
+    example: `import { useBattery } from '@sharpbits/react-interaction-hooks'
 
 function BatteryIndicator() {
   const { supported, level, charging } = useBattery()
@@ -1119,7 +1119,7 @@ function BatteryIndicator() {
     description: "ควบคุม Vibration API สำหรับสั่น device ตาม pattern ที่กำหนด",
     params: [],
     returns: "(pattern: number | number[]) => void — function สำหรับสั่น",
-    example: `import { useVibrate } from 'hookset'
+    example: `import { useVibrate } from '@sharpbits/react-interaction-hooks'
 
 function HapticButton() {
   const vibrate = useVibrate()
@@ -1135,7 +1135,7 @@ function HapticButton() {
     description: "จัดการ Screen Wake Lock API เพื่อป้องกัน screen ดับขณะใช้งาน คืน active, request, release",
     params: [],
     returns: "{ supported: boolean; active: boolean; request: () => Promise<void>; release: () => Promise<void> }",
-    example: `import { useWakeLock } from 'hookset'
+    example: `import { useWakeLock } from '@sharpbits/react-interaction-hooks'
 
 function PresentationMode() {
   const { supported, active, request, release } = useWakeLock()
@@ -1152,7 +1152,7 @@ function PresentationMode() {
     description: "ติดตาม Gamepad API คืน gamepads ที่เชื่อมต่ออยู่และ connected state",
     params: [],
     returns: "{ gamepads: Gamepad[]; connected: boolean }",
-    example: `import { useGamepad } from 'hookset'
+    example: `import { useGamepad } from '@sharpbits/react-interaction-hooks'
 
 function GamepadStatus() {
   const { gamepads, connected } = useGamepad()
@@ -1170,7 +1170,7 @@ function GamepadStatus() {
       { name: "lang", type: "string", default: "'en-US'", description: "ภาษาสำหรับ recognition เช่น 'th-TH', 'en-US'" },
     ],
     returns: "{ supported: boolean; listening: boolean; transcript: string; start: () => void; stop: () => void; reset: () => void }",
-    example: `import { useSpeechRecognition } from 'hookset'
+    example: `import { useSpeechRecognition } from '@sharpbits/react-interaction-hooks'
 
 function VoiceSearch() {
   const { supported, listening, transcript, start, stop } = useSpeechRecognition('en-US')
@@ -1188,7 +1188,7 @@ function VoiceSearch() {
     description: "ใช้ Web Speech Synthesis API แปลง text เป็นเสียงพูด คืน speak, cancel, voices และ speaking state",
     params: [],
     returns: "{ supported: boolean; speaking: boolean; voices: SpeechSynthesisVoice[]; speak: (text: string, options?: SpeechSynthesisUtterance) => void; cancel: () => void }",
-    example: `import { useSpeechSynthesis } from 'hookset'
+    example: `import { useSpeechSynthesis } from '@sharpbits/react-interaction-hooks'
 
 function TextReader({ text }) {
   const { speak, cancel, speaking, voices } = useSpeechSynthesis()
@@ -1205,7 +1205,7 @@ function TextReader({ text }) {
     description: "ใช้ EyeDropper API เปิด color picker สำหรับดูดสีจากหน้าจอ คืน color ที่เลือกและ open function",
     params: [],
     returns: "{ supported: boolean; color: string | null; open: () => Promise<void> }",
-    example: `import { useEyeDropper } from 'hookset'
+    example: `import { useEyeDropper } from '@sharpbits/react-interaction-hooks'
 
 function ColorPicker() {
   const { supported, color, open } = useEyeDropper()
@@ -1221,7 +1221,7 @@ function ColorPicker() {
 };
 
 const server = new Server(
-  { name: "hookset", version: "0.2.7" },
+  { name: "@sharpbits/react-interaction-hooks", version: "0.2.7" },
   { capabilities: { tools: {} } }
 );
 
@@ -1229,7 +1229,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     {
       name: "list_hooks",
-      description: "แสดงรายการ hooks ทั้งหมดใน hookset พร้อม description",
+      description: "แสดงรายการ hooks ทั้งหมดใน @sharpbits/react-interaction-hooks พร้อม description",
       inputSchema: { type: "object", properties: {} },
     },
     {

@@ -12,7 +12,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "hookset": resolve(__dirname, "src/index.ts"),
+      "@sharpbits/react-interaction-hooks": resolve(__dirname, "src/index.ts"),
     },
   },
 });

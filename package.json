@@ -1,5 +1,5 @@
 {
-  "name": "hookset",
+  "name": "@sharpbits/react-interaction-hooks",
   "version": "0.3.0",
   "description": "A collection of 63 React hooks for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, and more. Zero dependencies, tree-shakeable, lightweight, and blazing fast.",
   "sideEffects": false,
@@ -7,9 +7,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/271043/hookset.git"
+    "url": "https://github.com/271043/react-interaction-hooks.git"
   },
-  "homepage": "https://271043.github.io/hookset/",
+  "homepage": "https://271043.github.io/react-interaction-hooks/",
   "keywords": [
     "react",
     "hooks",

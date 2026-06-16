@@ -1,15 +1,15 @@
-# hookset
+# @sharpbits/react-interaction-hooks
 
 A collection of **63 React hooks** for UI interactions — pointer, touch, keyboard, focus, scroll, resize, clipboard, device sensors, timing, and more. Zero dependencies, tree-shakeable, lightweight, and blazing fast.
 
-[![npm](https://img.shields.io/npm/v/hookset)](https://www.npmjs.com/package/hookset)
-[![license](https://img.shields.io/npm/l/hookset)](./LICENSE)
-[![demo](https://img.shields.io/badge/demo-live-6366f1)](https://271043.github.io/hookset/)
+[![npm](https://img.shields.io/npm/v/@sharpbits/react-interaction-hooks)](https://www.npmjs.com/package/@sharpbits/react-interaction-hooks)
+[![license](https://img.shields.io/npm/l/@sharpbits/react-interaction-hooks)](./LICENSE)
+[![demo](https://img.shields.io/badge/demo-live-6366f1)](https://271043.github.io/@sharpbits/react-interaction-hooks/)
 
 ## Installation
 
 ```bash
-npm install hookset
+npm install @sharpbits/react-interaction-hooks
 ```
 
 ## Hooks

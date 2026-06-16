@@ -1,5 +1,5 @@
 {
-  "name": "hookset-mcp",
+  "name": "react-interaction-hooks-mcp",
   "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",
