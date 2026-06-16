@@ -15,7 +15,7 @@ import {
   useShare, usePermission, useNotification, useReducedMotion, useColorScheme,
   useGamepad, useSpeechRecognition, useSpeechSynthesis, useEyeDropper,
   useFocusReturn, useTabFocus, useContainerQuery,
-} from "@sharpbits/react-interaction-hooks";
+} from "hookset";
 import {
   Mouse, Hand, Keyboard, Eye, EyeOff, ScrollText, Maximize2, Clipboard,
   Cpu, Lock, LockOpen, Check, Moon, Sun, Smartphone, Monitor, ArrowDown,
@@ -597,7 +597,7 @@ function CopyDemo() {
 `const { copied, copy } = useCopyToClipboard()
 // resetDelay defaults to 2000ms
 copy("Hello!")`}>
-      <button style={s.btn({ background: copied ? "#16a34a" : "#6366f1" })} onClick={() => copy("Hello from @sharpbits/react-interaction-hooks!")}>
+      <button style={s.btn({ background: copied ? "#16a34a" : "#6366f1" })} onClick={() => copy("Hello from hookset!")}>
         {copied ? <><Check size={13} /> Copied!</> : <><ClipboardCopy size={13} /> Copy to clipboard</>}
       </button>
     </DemoCard>
@@ -1175,7 +1175,7 @@ await share({ title: "Hello", url: window.location.href })`}>
       {!supported
         ? <div style={s.val}>Web Share API not supported in this browser</div>
         : <button style={s.btn()} onClick={async () => {
-            try { await share({ title: "@sharpbits/react-interaction-hooks", url: "https://271043.github.io/@sharpbits/react-interaction-hooks/" }); setResult("Shared!"); }
+            try { await share({ title: "hookset", url: "https://271043.github.io/hookset/" }); setResult("Shared!"); }
             catch { setResult("Cancelled"); }
           }}><Share2 size={13} /> Share</button>
       }
@@ -1214,7 +1214,7 @@ notify("Hello!", { body: "World" })`}>
                 <Bell size={13} /> Request Permission
               </button>
               <button style={s.btn({ background: permission === "granted" ? "#15803d" : "#94a3b8" })}
-                onClick={() => notify("@sharpbits/react-interaction-hooks", { body: "Hello from useNotification!" })}
+                onClick={() => notify("hookset", { body: "Hello from useNotification!" })}
                 disabled={permission !== "granted"}>
                 Send
               </button>
@@ -1289,7 +1289,7 @@ function SpeechRecognitionDemo() {
 
 function SpeechSynthesisDemo() {
   const { supported, speaking, speak, cancel } = useSpeechSynthesis();
-  const [text, setText] = useState("Hello from @sharpbits/react-interaction-hooks!");
+  const [text, setText] = useState("Hello from hookset!");
   return (
     <DemoCard hookName="useSpeechSynthesis" code={
 `const { speak, speaking, cancel } = useSpeechSynthesis()
@@ -1429,11 +1429,11 @@ export default function App() {
 
       <header style={s.header}>
         <div style={s.headerLeft}>
-          <span style={s.headerTitle}>@sharpbits/react-interaction-hooks</span>
+          <span style={s.headerTitle}>hookset</span>
           <span style={s.headerSub}>65 hooks · zero dependencies · tree-shakeable</span>
         </div>
         <a
-          href="https://www.npmjs.com/package/@sharpbits/react-interaction-hooks"
+          href="https://www.npmjs.com/package/hookset"
           target="_blank" rel="noreferrer"
           style={s.headerBadge}
         >
